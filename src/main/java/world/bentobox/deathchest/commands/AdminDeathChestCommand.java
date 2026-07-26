@@ -68,9 +68,9 @@ public class AdminDeathChestCommand extends CompositeCommand {
         user.sendMessage("deathchest.commands.admin.header", TextVariables.NAME, args.get(0),
                 TextVariables.NUMBER, String.valueOf(chests.size()));
         for (int i = 0; i < chests.size(); i++) {
-            DeathChestRecord record = chests.get(i);
-            Location loc = record.getChestLoc();
-            Location death = record.getDeathLoc();
+            DeathChestRecord chest = chests.get(i);
+            Location loc = chest.getChestLoc();
+            Location death = chest.getDeathLoc();
             user.sendMessage("deathchest.commands.admin.entry", TextVariables.NUMBER, String.valueOf(i + 1),
                     TextVariables.DESCRIPTION, WorldName.describe(addon, user, loc), "[death]",
                     WorldName.describe(addon, user, death));

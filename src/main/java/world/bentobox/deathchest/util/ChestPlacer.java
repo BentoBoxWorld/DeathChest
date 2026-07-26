@@ -188,20 +188,30 @@ public class ChestPlacer {
      * @return candidate block locations in preference order
      */
     private List<Location> nearby(@NonNull Location centre, int radius) {
-        World world = centre.getWorld();
         int cx = centre.getBlockX();
-        int cy = centre.getBlockY();
         int cz = centre.getBlockZ();
-        int min = world.getMinHeight();
-        int max = world.getMaxHeight() - 1;
 
         List<Location> list = new ArrayList<>();
-        addColumn(list, world, cx, cy, cz, radius, min, max);
-        forEachRing(radius, (dx, dz) -> addColumn(list, world, cx + dx, cy, cz + dz, radius, min, max));
+        addColumn(list, centre, cx, cz, radius);
+        forEachRing(radius, (dx, dz) -> addColumn(list, centre, cx + dx, cz + dz, radius));
         return list;
     }
 
-    private void addColumn(List<Location> list, World world, int x, int cy, int z, int radius, int min, int max) {
+    /**
+     * Adds the blocks within {@code radius} above and below the centre's height at one x/z
+     * column, closest to the centre first.
+     *
+     * @param list   list to add to
+     * @param centre centre of the search, which supplies the world and the height to work from
+     * @param x      column x
+     * @param z      column z
+     * @param radius how far up and down to go
+     */
+    private void addColumn(List<Location> list, @NonNull Location centre, int x, int z, int radius) {
+        World world = centre.getWorld();
+        int cy = centre.getBlockY();
+        int min = world.getMinHeight();
+        int max = world.getMaxHeight() - 1;
         for (int dy = 0; dy <= radius; dy++) {
             if (cy - dy >= min) {
                 list.add(new Location(world, x, cy - dy, z));

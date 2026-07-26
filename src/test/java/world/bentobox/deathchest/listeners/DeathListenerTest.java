@@ -43,7 +43,7 @@ class DeathListenerTest extends CommonTestSetup {
 
     private Settings settings;
     private DeathListener listener;
-    private DeathChestRecord record;
+    private DeathChestRecord chest;
 
     @BeforeEach
     @Override
@@ -60,8 +60,8 @@ class DeathListenerTest extends CommonTestSetup {
         // Real item behaviour: the blanket Bukkit deep stubs do not give working ItemStacks
         mockedBukkit.when(org.bukkit.Bukkit::getItemFactory).thenReturn(server.getItemFactory());
         mockedBukkit.when(org.bukkit.Bukkit::getUnsafe).thenReturn(server.getUnsafe());
-        record = new DeathChestRecord();
-        when(manager.createChest(any(), anyList(), anyInt())).thenReturn(record);
+        chest = new DeathChestRecord();
+        when(manager.createChest(any(), anyList(), anyInt())).thenReturn(chest);
         when(manager.readItems(any())).thenReturn(new ArrayList<>());
         listener = new DeathListener(addon);
     }
@@ -162,7 +162,7 @@ class DeathListenerTest extends CommonTestSetup {
         World gameWorld = mock(World.class);
         when(gameWorld.getName()).thenReturn("bskyblock_world");
         when(gameWorld.getEnvironment()).thenReturn(World.Environment.NORMAL);
-        record.setChestLoc(new Location(gameWorld, 10, 70, 20));
+        chest.setChestLoc(new Location(gameWorld, 10, 70, 20));
         mockedBukkit.when(() -> org.bukkit.Bukkit.getWorld(org.mockito.ArgumentMatchers.anyString()))
                 .thenReturn(gameWorld);
         PlayerDeathEvent e = deathEvent(new ArrayList<>(List.of(new ItemStack(Material.DIAMOND))), 0);

@@ -52,14 +52,14 @@ public class ChestListener implements Listener {
         if (found.isEmpty()) {
             return;
         }
-        DeathChestRecord record = found.get();
-        if (!canAccess(e.getPlayer(), record)) {
+        DeathChestRecord chest = found.get();
+        if (!canAccess(e.getPlayer(), chest)) {
             e.setCancelled(true);
             User.getInstance(e.getPlayer()).sendMessage("deathchest.errors.not-your-chest", TextVariables.NAME,
-                    String.valueOf(record.getOwnerName()));
+                    String.valueOf(chest.getOwnerName()));
             return;
         }
-        manager().giveExperience(e.getPlayer(), record);
+        manager().giveExperience(e.getPlayer(), chest);
     }
 
     /**
@@ -74,7 +74,7 @@ public class ChestListener implements Listener {
         if (location == null) {
             return;
         }
-        manager().getChestAt(location).ifPresent(record -> manager().refill(record));
+        manager().getChestAt(location).ifPresent(chest -> manager().refill(chest));
     }
 
     /**
@@ -89,17 +89,17 @@ public class ChestListener implements Listener {
         if (found.isEmpty()) {
             return;
         }
-        DeathChestRecord record = found.get();
-        if (!canAccess(e.getPlayer(), record)) {
+        DeathChestRecord chest = found.get();
+        if (!canAccess(e.getPlayer(), chest)) {
             e.setCancelled(true);
             User.getInstance(e.getPlayer()).sendMessage("deathchest.errors.not-your-chest", TextVariables.NAME,
-                    String.valueOf(record.getOwnerName()));
+                    String.valueOf(chest.getOwnerName()));
             return;
         }
         // The block's own contents drop with it. Whatever the addon is still holding has to be
         // handed over explicitly or it would be lost with the record.
-        manager().claim(e.getPlayer(), record);
-        manager().delete(record);
+        manager().claim(e.getPlayer(), chest);
+        manager().delete(chest);
     }
 
     /**
@@ -128,11 +128,11 @@ public class ChestListener implements Listener {
 
     /**
      * @param player player trying to get at a chest
-     * @param record the chest's record
+     * @param chest  the chest record
      * @return true if this player may open or break the chest
      */
-    boolean canAccess(Player player, DeathChestRecord record) {
-        UUID owner = record.getOwnerUUID();
+    boolean canAccess(Player player, DeathChestRecord chest) {
+        UUID owner = chest.getOwnerUUID();
         if (owner == null || owner.equals(player.getUniqueId())) {
             return true;
         }
@@ -141,8 +141,8 @@ public class ChestListener implements Listener {
         }
         // Team access means the island the chest sits on, so a chest that landed on the
         // owner's island is shared with that island's team and no one else.
-        Location chest = record.getChestLoc();
-        return chest != null && addon.getIslands().getIslandAt(chest)
+        Location chestLocation = chest.getChestLoc();
+        return chestLocation != null && addon.getIslands().getIslandAt(chestLocation)
                 .map(island -> island.getMemberSet().contains(player.getUniqueId())
                         && island.getMemberSet().contains(owner))
                 .orElse(false);

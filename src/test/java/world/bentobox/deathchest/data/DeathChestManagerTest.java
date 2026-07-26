@@ -163,15 +163,15 @@ class DeathChestManagerTest extends CommonTestSetup {
     void testCreateChestPlacesABlockAndIndexesIt() {
         List<ItemStack> drops = new ArrayList<>(List.of(new ItemStack(Material.DIAMOND, 3)));
 
-        DeathChestRecord record = manager.createChest(mockPlayer, drops, 25);
+        DeathChestRecord chest = manager.createChest(mockPlayer, drops, 25);
 
-        assertNotNull(record);
-        assertFalse(record.isVirtual(), "A player on solid ground should get a real chest");
-        assertEquals(uuid, record.getOwnerUUID());
-        assertEquals(25, record.getExperience());
-        assertEquals("island-1", record.getIslandId());
+        assertNotNull(chest);
+        assertFalse(chest.isVirtual(), "A player on solid ground should get a real chest");
+        assertEquals(uuid, chest.getOwnerUUID());
+        assertEquals(25, chest.getExperience());
+        assertEquals("island-1", chest.getIslandId());
         verify(chestBlock).setType(Material.CHEST, false);
-        assertTrue(manager.getChestAt(record.getChestLoc()).isPresent());
+        assertTrue(manager.getChestAt(chest.getChestLoc()).isPresent());
     }
 
     /**
@@ -196,13 +196,13 @@ class DeathChestManagerTest extends CommonTestSetup {
     void testRefillDoesNotWipeTheChestWithAStaleSnapshot() {
         ItemStack overflow = new ItemStack(Material.COBBLESTONE, 64);
         when(chestInventory.addItem(any(ItemStack[].class))).thenReturn(new HashMap<>(Map.of(0, overflow)));
-        DeathChestRecord record = manager.createChest(mockPlayer,
+        DeathChestRecord chest = manager.createChest(mockPlayer,
                 new ArrayList<>(List.of(new ItemStack(Material.DIAMOND), overflow)), 0);
         ItemStack[] contents = new ItemStack[27];
         contents[0] = new ItemStack(Material.DIAMOND);
         when(chestInventory.getContents()).thenReturn(contents);
 
-        manager.refill(record);
+        manager.refill(chest);
 
         verify(container, never()).update(Mockito.anyBoolean(), Mockito.anyBoolean());
     }
@@ -213,10 +213,10 @@ class DeathChestManagerTest extends CommonTestSetup {
         when(im.getIsland(any(World.class), any(UUID.class))).thenReturn(null);
         List<ItemStack> drops = new ArrayList<>(List.of(new ItemStack(Material.DIAMOND, 3)));
 
-        DeathChestRecord record = manager.createChest(mockPlayer, drops, 0);
+        DeathChestRecord chest = manager.createChest(mockPlayer, drops, 0);
 
-        assertTrue(record.isVirtual(), "With nowhere to build, items must be held not lost");
-        assertEquals(1, manager.readItems(record).size());
+        assertTrue(chest.isVirtual(), "With nowhere to build, items must be held not lost");
+        assertEquals(1, manager.readItems(chest).size());
         verify(chestBlock, never()).setType(any(Material.class), Mockito.anyBoolean());
     }
 
@@ -226,10 +226,10 @@ class DeathChestManagerTest extends CommonTestSetup {
         when(chestInventory.addItem(any(ItemStack[].class))).thenReturn(new HashMap<>(Map.of(0, overflow)));
         List<ItemStack> drops = new ArrayList<>(List.of(new ItemStack(Material.DIAMOND), overflow));
 
-        DeathChestRecord record = manager.createChest(mockPlayer, drops, 0);
+        DeathChestRecord chest = manager.createChest(mockPlayer, drops, 0);
 
-        assertFalse(record.isVirtual());
-        List<ItemStack> held = manager.readItems(record);
+        assertFalse(chest.isVirtual());
+        List<ItemStack> held = manager.readItems(chest);
         assertEquals(1, held.size());
         assertEquals(Material.COBBLESTONE, held.get(0).getType());
     }
@@ -239,10 +239,10 @@ class DeathChestManagerTest extends CommonTestSetup {
         settings.setChestMaterial("NOT_A_REAL_BLOCK");
         List<ItemStack> drops = new ArrayList<>(List.of(new ItemStack(Material.DIAMOND)));
 
-        DeathChestRecord record = manager.createChest(mockPlayer, drops, 0);
+        DeathChestRecord chest = manager.createChest(mockPlayer, drops, 0);
 
-        assertTrue(record.isVirtual());
-        assertEquals(1, manager.readItems(record).size());
+        assertTrue(chest.isVirtual());
+        assertEquals(1, manager.readItems(chest).size());
     }
 
     @Test
@@ -304,15 +304,15 @@ class DeathChestManagerTest extends CommonTestSetup {
         when(mockPlayer.getInventory()).thenReturn(playerInv);
         when(im.getProtectedIslandAt(any(Location.class))).thenReturn(Optional.empty());
         when(im.getIsland(any(World.class), any(UUID.class))).thenReturn(null);
-        DeathChestRecord record = manager.createChest(mockPlayer,
+        DeathChestRecord chest = manager.createChest(mockPlayer,
                 new ArrayList<>(List.of(new ItemStack(Material.DIAMOND, 2))), 30);
 
-        int given = manager.claim(mockPlayer, record);
+        int given = manager.claim(mockPlayer, chest);
 
         assertEquals(1, given);
         verify(mockPlayer).giveExp(30);
-        assertEquals(0, record.getExperience());
-        assertTrue(manager.readItems(record).isEmpty());
+        assertEquals(0, chest.getExperience());
+        assertTrue(manager.readItems(chest).isEmpty());
     }
 
     @Test
@@ -322,27 +322,27 @@ class DeathChestManagerTest extends CommonTestSetup {
         when(mockPlayer.getInventory()).thenReturn(playerInv);
         when(im.getProtectedIslandAt(any(Location.class))).thenReturn(Optional.empty());
         when(im.getIsland(any(World.class), any(UUID.class))).thenReturn(null);
-        DeathChestRecord record = manager.createChest(mockPlayer,
+        DeathChestRecord chest = manager.createChest(mockPlayer,
                 new ArrayList<>(List.of(new ItemStack(Material.DIAMOND))), 10);
 
-        manager.claim(mockPlayer, record);
-        assertEquals(0, manager.claim(mockPlayer, record));
+        manager.claim(mockPlayer, chest);
+        assertEquals(0, manager.claim(mockPlayer, chest));
         verify(mockPlayer, times(1)).giveExp(anyInt());
     }
 
     @Test
     void testGiveExperienceOnlyPaysOutOnce() {
-        DeathChestRecord record = manager.createChest(mockPlayer, new ArrayList<>(), 42);
-        manager.giveExperience(mockPlayer, record);
-        manager.giveExperience(mockPlayer, record);
+        DeathChestRecord chest = manager.createChest(mockPlayer, new ArrayList<>(), 42);
+        manager.giveExperience(mockPlayer, chest);
+        manager.giveExperience(mockPlayer, chest);
         verify(mockPlayer, times(1)).giveExp(42);
     }
 
     @Test
     void testDeleteRemovesFromCacheAndIndex() {
-        DeathChestRecord record = manager.createChest(mockPlayer, new ArrayList<>(), 0);
-        Location loc = record.getChestLoc();
-        manager.delete(record);
+        DeathChestRecord chest = manager.createChest(mockPlayer, new ArrayList<>(), 0);
+        Location loc = chest.getChestLoc();
+        manager.delete(chest);
         assertTrue(manager.getAllChests().isEmpty());
         assertTrue(manager.getChestAt(loc).isEmpty());
     }
@@ -364,9 +364,9 @@ class DeathChestManagerTest extends CommonTestSetup {
 
     @Test
     void testRefillEmptyChestRemovesTheBlockAndRecord() {
-        DeathChestRecord record = manager.createChest(mockPlayer, new ArrayList<>(), 0);
+        DeathChestRecord chest = manager.createChest(mockPlayer, new ArrayList<>(), 0);
 
-        manager.refill(record);
+        manager.refill(chest);
 
         assertTrue(manager.getAllChests().isEmpty());
         verify(chestBlock).setType(Material.AIR, false);
@@ -376,18 +376,18 @@ class DeathChestManagerTest extends CommonTestSetup {
     void testRefillMovesHeldItemsIntoTheChest() {
         ItemStack overflow = new ItemStack(Material.COBBLESTONE, 64);
         when(chestInventory.addItem(any(ItemStack[].class))).thenReturn(new HashMap<>(Map.of(0, overflow)));
-        DeathChestRecord record = manager.createChest(mockPlayer,
+        DeathChestRecord chest = manager.createChest(mockPlayer,
                 new ArrayList<>(List.of(new ItemStack(Material.DIAMOND), overflow)), 0);
-        assertEquals(1, manager.readItems(record).size());
+        assertEquals(1, manager.readItems(chest).size());
 
         // This time everything fits, and the chest is no longer empty
         when(chestInventory.addItem(any(ItemStack[].class))).thenReturn(new HashMap<>());
         ItemStack[] contents = new ItemStack[27];
         contents[0] = new ItemStack(Material.DIAMOND);
         when(chestInventory.getContents()).thenReturn(contents);
-        manager.refill(record);
+        manager.refill(chest);
 
-        assertTrue(manager.readItems(record).isEmpty());
+        assertTrue(manager.readItems(chest).isEmpty());
         assertFalse(manager.getAllChests().isEmpty(), "The chest still holds items so it must stay");
     }
 
@@ -395,14 +395,14 @@ class DeathChestManagerTest extends CommonTestSetup {
     void testRefillWhenTheBlockHasGoneTurnsTheChestVirtual() {
         ItemStack overflow = new ItemStack(Material.COBBLESTONE, 64);
         when(chestInventory.addItem(any(ItemStack[].class))).thenReturn(new HashMap<>(Map.of(0, overflow)));
-        DeathChestRecord record = manager.createChest(mockPlayer,
+        DeathChestRecord chest = manager.createChest(mockPlayer,
                 new ArrayList<>(List.of(new ItemStack(Material.DIAMOND), overflow)), 0);
         // The block is no longer a container
         when(chestBlock.getState()).thenReturn(mock(org.bukkit.block.BlockState.class));
 
-        manager.refill(record);
+        manager.refill(chest);
 
-        assertTrue(record.isVirtual());
+        assertTrue(chest.isVirtual());
         assertFalse(manager.getAllChests().isEmpty(), "Held items must survive the block going away");
     }
 }

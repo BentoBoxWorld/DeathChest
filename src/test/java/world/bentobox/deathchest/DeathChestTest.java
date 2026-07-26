@@ -1,5 +1,6 @@
 package world.bentobox.deathchest;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -10,6 +11,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -37,6 +39,7 @@ import world.bentobox.bentobox.api.addons.Addon.State;
 import world.bentobox.bentobox.api.addons.AddonDescription;
 import world.bentobox.bentobox.api.addons.GameModeAddon;
 import world.bentobox.bentobox.api.commands.CompositeCommand;
+import world.bentobox.bentobox.api.configuration.Config;
 import world.bentobox.bentobox.database.AbstractDatabaseHandler;
 import world.bentobox.bentobox.database.DatabaseSetup;
 import world.bentobox.bentobox.database.DatabaseSetup.DatabaseType;
@@ -259,6 +262,29 @@ class DeathChestTest extends CommonTestSetup {
         addon.onEnable();
         addon.onReload();
         assertNotNull(addon.getSettings());
+    }
+
+    /**
+     * A reload with a broken config leaves the settings null and disables the addon. Restarting
+     * the expiry task at that point dereferences them, so the reload has to bail out instead.
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    void testOnReloadWithUnloadableSettingsDoesNotThrow() throws Exception {
+        addon.onLoad();
+        addon.setState(State.ENABLED);
+        addon.onEnable();
+        // Swap in a config that fails to load, as a broken config.yml would
+        Config<Settings> broken = mock(Config.class);
+        when(broken.loadConfigObject()).thenReturn(null);
+        Field field = DeathChest.class.getDeclaredField("config");
+        field.setAccessible(true);
+        field.set(addon, broken);
+
+        assertDoesNotThrow(addon::onReload);
+
+        assertNull(addon.getSettings());
+        assertEquals(State.DISABLED, addon.getState());
     }
 
     @Test

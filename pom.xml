@@ -68,7 +68,8 @@
         <!-- This allows to change between versions. -->
         <build.version>1.0.0</build.version>
         <!-- Sonar Cloud -->
-        <sonar.projectKey>BentoBoxWorld_DeathChest</sonar.projectKey>
+        <!-- The registered project key on SonarCloud, which is not the repository name -->
+        <sonar.projectKey>BentoBoxWorld_DeathChest2</sonar.projectKey>
         <sonar.organization>bentobox-world</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
