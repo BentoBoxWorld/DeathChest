@@ -1,0 +1,35 @@
+deathchest:
+  death:
+    chest-placed: "<green>당신의 아이템은 <aqua>[world] [number], [y], [z]</aqua>의 죽음의 상자에 보관되어 있습니다.</green>"
+    stored-virtual: "<gold>죽음의 상자를 놓을 수 있는 장소가 없어서, 당신의 아이템은 임시 보관 중입니다. <aqua>/[label] deathchest</aqua>를 사용하여 받아가세요.</gold>"
+    overflow: "<gold>들어가지 않은 아이템이 있습니다. 상자를 비우면 나타날 것입니다.</gold>"
+    expires: "<gray>상자는 [number]분 후에 사라질 것입니다.</gray>"
+  world:
+    nether: "네더"
+    the-end: "디 엔드"
+  errors:
+    not-your-chest: "<red>이 죽음의 상자는 [name]의 것입니다.</red>"
+  commands:
+    player:
+      description: "당신의 죽음의 상자를 나열하고 아이템을 회수합니다"
+      parameters: "[claim|tp] [number]"
+      header: "<green>당신은 죽음의 상자 [number]개를 가지고 있습니다:</green>"
+      entry: "<aqua>[number].</aqua> <white>[description]</white> <gray>([time])</gray>"
+      footer: "<gray><aqua>/[label] deathchest claim 1</aqua>를 사용하여 임시 보관 아이템을 회수하거나, <aqua>/[label] deathchest tp 1</aqua>로 상자를 방문할 수 있습니다.</gray>"
+      none: "<gray>죽음의 상자가 없습니다.</gray>"
+      held-by-addon: "임시 보관 중"
+      never-expires: "영구 보관"
+      minutes-left: "[number]분 남음"
+      unknown-number: "<red>죽음의 상자 번호 [number]이 없습니다.</red>"
+      claimed: "<green>[number]개의 아이템 스택을 받았습니다.</green>"
+      nothing-to-claim: "<gray>이 상자에 임시 보관된 아이템이 없습니다. 직접 열어서 가져가세요.</gray>"
+      no-block-to-visit: "<red>이 죽음의 상자는 월드에 존재하지 않습니다. 회수하세요.</red>"
+      teleported: "<green>죽음의 상자로 텔레포트되었습니다.</green>"
+    admin:
+      description: "죽음의 상자를 나열하고 purge합니다"
+      parameters: "[player|purge]"
+      summary: "<green>저장된 죽음의 상자는 [number]개입니다.</green>"
+      none: "<gray>[name]은 죽음의 상자가 없습니다.</gray>"
+      header: "<green>[name]은 죽음의 상자 [number]개를 가지고 있습니다:</green>"
+      entry: "<aqua>[number].</aqua> <white>상자: [description]</white> <gray>죽은 위치: [death]</gray>"
+      purged: "<green>만료된 죽음의 상자 [number]개를 삭제했습니다.</green>"

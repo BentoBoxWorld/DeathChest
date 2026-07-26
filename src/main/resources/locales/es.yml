@@ -1,0 +1,35 @@
+deathchest:
+  death:
+    chest-placed: "<green>Tus objetos están en un cofre mortuorio en <aqua>[world] [number], [y], [z]</aqua>.</green>"
+    stored-virtual: "<gold>No había lugar para poner un cofre mortuorio, así que tus objetos están siendo guardados. Usa <aqua>/[label] deathchest</aqua> para recuperarlos.</gold>"
+    overflow: "<gold>Algunos objetos no cabían. Aparecerán en el cofre a medida que lo vacíes.</gold>"
+    expires: "<gray>El cofre desaparecerá en [number] minutos.</gray>"
+  world:
+    nether: "Nether"
+    the-end: "The End"
+  errors:
+    not-your-chest: "<red>Este cofre mortuorio pertenece a [name].</red>"
+  commands:
+    player:
+      description: "enumera tus cofres mortuorios y recupera tus objetos"
+      parameters: "[claim|tp] [number]"
+      header: "<green>Tienes [number] cofre(s) mortuorio(s):</green>"
+      entry: "<aqua>[number].</aqua> <white>[description]</white> <gray>([time])</gray>"
+      footer: "<gray>Usa <aqua>/[label] deathchest claim 1</aqua> para recopilar objetos guardados, o <aqua>/[label] deathchest tp 1</aqua> para visitar uno.</gray>"
+      none: "<gray>No tienes cofres mortuorios.</gray>"
+      held-by-addon: "guardado para ti"
+      never-expires: "no expira"
+      minutes-left: "[number] min restantes"
+      unknown-number: "<red>No hay un cofre mortuorio número [number].</red>"
+      claimed: "<green>Recibiste [number] pila(s) de objeto(s).</green>"
+      nothing-to-claim: "<gray>Nada está siendo guardado para ese cofre - ve y ábrelo.</gray>"
+      no-block-to-visit: "<red>Ese cofre mortuorio no tiene un bloque en el mundo. Reclámalo en su lugar.</red>"
+      teleported: "<green>Teletransportado a tu cofre mortuorio.</green>"
+    admin:
+      description: "enumera y purga cofres mortuorios"
+      parameters: "[player|purge]"
+      summary: "<green>Hay [number] cofre(s) mortuorio(s) almacenado(s).</green>"
+      none: "<gray>[name] no tiene cofres mortuorios.</gray>"
+      header: "<green>[name] tiene [number] cofre(s) mortuorio(s):</green>"
+      entry: "<aqua>[number].</aqua> <white>cofre: [description]</white> <gray>murió en: [death]</gray>"
+      purged: "<green>Expiró [number] cofre(s) mortuorio(s).</green>"

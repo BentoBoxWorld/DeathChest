@@ -1,0 +1,35 @@
+deathchest:
+  death:
+    chest-placed: "<green>A tárgyaid egy halálláda <aqua>[world] [number], [y], [z]</aqua> koordinátáin vannak.</green>"
+    stored-virtual: "<gold>Nincs hely a halálládához, ezért a tárgyaid számunkra kerültek tárolásra. Használd az <aqua>/[label] deathchest</aqua> parancsot, hogy vissza kapd őket.</gold>"
+    overflow: "<gold>Egyes tárgyak nem férnek be. Megjelennek majd a ládában, amint kiürítod azt.</gold>"
+    expires: "<gray>A láda [number] perc múlva eltűnik.</gray>"
+  world:
+    nether: "Nether"
+    the-end: "The End"
+  errors:
+    not-your-chest: "<red>Ez a halálláda [name]-é.</red>"
+  commands:
+    player:
+      description: "Felsorolja a halálládáidat és visszakéri a tárgyaidat"
+      parameters: "[claim|tp] [number]"
+      header: "<green>[number] halálládád van:</green>"
+      entry: "<aqua>[number].</aqua> <white>[description]</white> <gray>([time])</gray>"
+      footer: "<gray>Használd az <aqua>/[label] deathchest claim 1</aqua> parancsot a tárolt tárgyak összegyűjtéséhez, vagy az <aqua>/[label] deathchest tp 1</aqua> parancsot az egyik meglátogatásához.</gray>"
+      none: "<gray>Nincs halálládád.</gray>"
+      held-by-addon: "tárolásra kerültek"
+      never-expires: "soha nem jár le"
+      minutes-left: "[number] perc marad"
+      unknown-number: "<red>Nincs [number] számú halálláda.</red>"
+      claimed: "<green>Kapott [number] tárgycsomag(ot).</green>"
+      nothing-to-claim: "<gray>Nincs mit visszavenni ebből a ládából - nyisd ki magad.</gray>"
+      no-block-to-visit: "<red>Ennek a halálládának nincs blokkja a világban. Vedd át helyette.</red>"
+      teleported: "<green>Teleportálva a halálládádhoz.</green>"
+    admin:
+      description: "Halálládákat listáz és lejárt ládákat töröl"
+      parameters: "[player|purge]"
+      summary: "<green>[number] halálláda van tárolva.</green>"
+      none: "<gray>[name] nincs halálládája.</gray>"
+      header: "<green>[name]-nak [number] halálládája van:</green>"
+      entry: "<aqua>[number].</aqua> <white>láda: [description]</white> <gray>meghalt helyen: [death]</gray>"
+      purged: "<green>[number] halálláda törlésre került.</green>"

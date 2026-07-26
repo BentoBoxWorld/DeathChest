@@ -1,0 +1,35 @@
+deathchest:
+  death:
+    chest-placed: "<green>Deine Gegenstände sind in einer Todestruhe bei <aqua>[world] [number], [y], [z]</aqua>.</green>"
+    stored-virtual: "<gold>Es gab keinen Platz für eine Todestruhe, daher werden deine Gegenstände für dich aufbewahrt. Verwende <aqua>/[label] deathchest</aqua> um sie zurückzubekommen.</gold>"
+    overflow: "<gold>Einige Gegenstände würden nicht passen. Sie erscheinen in der Truhe, wenn du diese leerst.</gold>"
+    expires: "<gray>Die Truhe wird in [number] Minuten verschwinden.</gray>"
+  world:
+    nether: "Nether"
+    the-end: "The End"
+  errors:
+    not-your-chest: "<red>Diese Todestruhe gehört [name].</red>"
+  commands:
+    player:
+      description: "Zeige deine Todestruhen auf und hole deine Gegenstände zurück"
+      parameters: "[claim|tp] [number]"
+      header: "<green>Du hast [number] Todestruhe(n):</green>"
+      entry: "<aqua>[number].</aqua> <white>[description]</white> <gray>([time])</gray>"
+      footer: "<gray>Verwende <aqua>/[label] deathchest claim 1</aqua> um aufbewahrte Gegenstände zu sammeln, oder <aqua>/[label] deathchest tp 1</aqua> um eine zu besuchen.</gray>"
+      none: "<gray>Du hast keine Todestruhen.</gray>"
+      held-by-addon: "für dich aufbewahrt"
+      never-expires: "läuft nie ab"
+      minutes-left: "[number] Min verbleibend"
+      unknown-number: "<red>Es gibt keine Todestruhe Nummer [number].</red>"
+      claimed: "<green>Du hast [number] Gegenstapel erhalten.</green>"
+      nothing-to-claim: "<gray>Es gibt nichts zum Abholen für diese Truhe - öffne sie selbst.</gray>"
+      no-block-to-visit: "<red>Diese Todestruhe existiert nicht in der Welt. Beanspruche sie stattdessen.</red>"
+      teleported: "<green>Zu deiner Todestruhe teleportiert.</green>"
+    admin:
+      description: "Zeige Todestruhen auf und lösche abgelaufene"
+      parameters: "[player|purge]"
+      summary: "<green>Es gibt [number] Todestruhe(n) gespeichert.</green>"
+      none: "<gray>[name] hat keine Todestruhen.</gray>"
+      header: "<green>[name] hat [number] Todestruhe(n):</green>"
+      entry: "<aqua>[number].</aqua> <white>Kiste: [description]</white> <gray>gestorben bei: [death]</gray>"
+      purged: "<green>[number] Todestruhe(n) gelöscht.</green>"

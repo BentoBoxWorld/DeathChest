@@ -1,0 +1,35 @@
+deathchest:
+  death:
+    chest-placed: "<green>Obiectele tale sunt într-o ladă de moarte la <aqua>[world] [number], [y], [z]</aqua>.</green>"
+    stored-virtual: "<gold>Nu a fost loc pentru o ladă de moarte, deci obiectele tale sunt păstrate pentru tine. Folosește <aqua>/[label] deathchest</aqua> pentru a le recupera.</gold>"
+    overflow: "<gold>Unele obiecte nu vor încăpea. Vor apărea în ladă pe măsură ce o golești.</gold>"
+    expires: "<gray>Lada va dispărea în [number] minute.</gray>"
+  world:
+    nether: "Nether"
+    the-end: "The End"
+  errors:
+    not-your-chest: "<red>Această ladă de moarte aparține lui [name].</red>"
+  commands:
+    player:
+      description: "Listează lezile tale de moarte și recuperează obiectele tale"
+      parameters: "[claim|tp] [number]"
+      header: "<green>Ai [number] ladă(e) de moarte:</green>"
+      entry: "<aqua>[number].</aqua> <white>[description]</white> <gray>([time])</gray>"
+      footer: "<gray>Folosește <aqua>/[label] deathchest claim 1</aqua> pentru a colecta obiectele păstrate, sau <aqua>/[label] deathchest tp 1</aqua> pentru a vizita una.</gray>"
+      none: "<gray>Nu ai lăzi de moarte.</gray>"
+      held-by-addon: "păstrate pentru tine"
+      never-expires: "nu expiră niciodată"
+      minutes-left: "[number] min rămaș"
+      unknown-number: "<red>Nu există o ladă de moarte numărul [number].</red>"
+      claimed: "<green>Ai primit [number] stivă(e) de obiecte.</green>"
+      nothing-to-claim: "<gray>Nu este nimic de colectat din această ladă - deschide-o singur.</gray>"
+      no-block-to-visit: "<red>Această ladă de moarte nu are un bloc în lume. Recupereaz-o în schimb.</red>"
+      teleported: "<green>Teleportat la lada ta de moarte.</green>"
+    admin:
+      description: "Listează și șterge lezile de moarte expirate"
+      parameters: "[player|purge]"
+      summary: "<green>Sunt [number] ladă(e) de moarte stocate.</green>"
+      none: "<gray>[name] nu are lăzi de moarte.</gray>"
+      header: "<green>[name] are [number] ladă(e) de moarte:</green>"
+      entry: "<aqua>[number].</aqua> <white>ladă: [description]</white> <gray>a murit la: [death]</gray>"
+      purged: "<green>[number] ladă(e) de moarte șterse.</green>"

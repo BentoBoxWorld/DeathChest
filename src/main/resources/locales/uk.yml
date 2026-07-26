@@ -1,0 +1,35 @@
+deathchest:
+  death:
+    chest-placed: "<green>Ваші предмети знаходяться в сундуку смерті в <aqua>[world] [number], [y], [z]</aqua>.</green>"
+    stored-virtual: "<gold>Немає місця для розміщення сундука, тому ваші предмети зберігаються для вас. Використайте <aqua>/[label] deathchest</aqua> для їх отримання.</gold>"
+    overflow: "<gold>Деякі предмети не поміщаються. Вони з'являться в сундуку по мірі його спорожнення.</gold>"
+    expires: "<gray>Сундук зникне через [number] хвилин.</gray>"
+  world:
+    nether: "Нижній світ"
+    the-end: "Край"
+  errors:
+    not-your-chest: "<red>Цей сундук смерті належить [name].</red>"
+  commands:
+    player:
+      description: "список ваших сундуків смерті та отримання предметів"
+      parameters: "[claim|tp] [number]"
+      header: "<green>У вас є [number] сундук(и) смерті:</green>"
+      entry: "<aqua>[number].</aqua> <white>[description]</white> <gray>([time])</gray>"
+      footer: "<gray>Використайте <aqua>/[label] deathchest claim 1</aqua> для збору предметів або <aqua>/[label] deathchest tp 1</aqua> для відвідування.</gray>"
+      none: "<gray>У вас немає сундуків смерті.</gray>"
+      held-by-addon: "зберігаються для вас"
+      never-expires: "не зникає"
+      minutes-left: "[number] хв залишилось"
+      unknown-number: "<red>Немає сундука смерті номер [number].</red>"
+      claimed: "<green>Ви отримали [number] стак(и) предметів.</green>"
+      nothing-to-claim: "<gray>Для цього сундука немає збережених предметів - відкрийте його самостійно.</gray>"
+      no-block-to-visit: "<red>Цей сундук смерті відсутній у світі. Заберіть його замість цього.</red>"
+      teleported: "<green>Телепортовані до вашого сундука смерті.</green>"
+    admin:
+      description: "список та видалення сундуків смерті"
+      parameters: "[player|purge]"
+      summary: "<green>Збережено [number] сундук(и) смерті.</green>"
+      none: "<gray>У [name] немає сундуків смерті.</gray>"
+      header: "<green>У [name] є [number] сундук(и) смерті:</green>"
+      entry: "<aqua>[number].</aqua> <white>сундук: [description]</white> <gray>загинув у: [death]</gray>"
+      purged: "<green>Видалено [number] сундук(и) смерті.</green>"

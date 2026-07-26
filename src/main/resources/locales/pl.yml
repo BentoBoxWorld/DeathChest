@@ -1,0 +1,35 @@
+deathchest:
+  death:
+    chest-placed: "<green>Twoje przedmioty znajdują się w skrzyni śmierci w <aqua>[world] [number], [y], [z]</aqua>.</green>"
+    stored-virtual: "<gold>Nie było miejsca na postawienie skrzyni śmierci, więc Twoje przedmioty są tymczasowo przechowywane. Użyj <aqua>/[label] deathchest</aqua> aby je odzyskać.</gold>"
+    overflow: "<gold>Niektóre przedmioty się nie zmieściły. Pojawią się w skrzyni śmierci, gdy ją opróżnisz.</gold>"
+    expires: "<gray>Skrzynia śmierci zniknie za [number] minut.</gray>"
+  world:
+    nether: "Nether"
+    the-end: "End"
+  errors:
+    not-your-chest: "<red>Ta skrzynia śmierci należy do gracza [name].</red>"
+  commands:
+    player:
+      description: "lista twoich skrzyń śmierci i odzyskanie przedmiotów"
+      parameters: "[claim|tp] [number]"
+      header: "<green>Masz [number] skrzynie śmierci:</green>"
+      entry: "<aqua>[number].</aqua> <white>[description]</white> <gray>([time])</gray>"
+      footer: "<gray>Użyj <aqua>/[label] deathchest claim 1</aqua> aby odzyskać przechowywane przedmioty, lub <aqua>/[label] deathchest tp 1</aqua> aby odwiedzić jedną.</gray>"
+      none: "<gray>Nie masz żadnych skrzyń śmierci.</gray>"
+      held-by-addon: "przechowywane dla ciebie"
+      never-expires: "nigdy nie wygasa"
+      minutes-left: "[number] min pozostało"
+      unknown-number: "<red>Nie ma skrzyni śmierci numer [number].</red>"
+      claimed: "<green>Otrzymałeś [number] stos(y) przedmiotów.</green>"
+      nothing-to-claim: "<gray>Nie ma nic do odzyskania dla tej skrzyni śmierci - idź i otwórz ją.</gray>"
+      no-block-to-visit: "<red>Ta skrzynia śmierci nie ma bloku na świecie. Zamiast tego ją odbierz.</red>"
+      teleported: "<green>Teleportowano do Twojej skrzyni śmierci.</green>"
+    admin:
+      description: "lista i usuwanie skrzyń śmierci"
+      parameters: "[player|purge]"
+      summary: "<green>Jest [number] skrzynie śmierci przechowywana(nych).</green>"
+      none: "<gray>Gracz [name] nie ma żadnych skrzyń śmierci.</gray>"
+      header: "<green>Gracz [name] ma [number] skrzynie śmierci:</green>"
+      entry: "<aqua>[number].</aqua> <white>skrzynia: [description]</white> <gray>zmarł w: [death]</gray>"
+      purged: "<green>Usunięto [number] skrzynie śmierci.</green>"

@@ -88,6 +88,12 @@ mvn clean package
 
 The jar lands in `target/`.
 
+## Translations
+
+Ships with 19 locales: `en-US` plus `cs`, `de`, `es`, `fr`, `hr`, `hu`, `id`, `it`, `ja`, `ko`, `lv`,
+`pl`, `ro`, `ru`, `tr`, `uk`, `vi`, `zh-CN`. The non-English files were machine translated and have not
+yet been reviewed by native speakers - corrections are very welcome.
+
 ## Not in this version
 
 Deliberately left out of the first cut, in rough order of how likely they are to be wanted:
@@ -98,4 +104,3 @@ Deliberately left out of the first cut, in rough order of how likely they are to
 * PvP looting rules - letting the killer open the chest.
 * Hopper protection. A hopper under a death chest will drain it.
 * Per-permission chest limits and expiry times.
-* Locales beyond `en-US`.
