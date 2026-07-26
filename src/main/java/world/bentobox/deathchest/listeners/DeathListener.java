@@ -16,6 +16,7 @@ import world.bentobox.bentobox.api.user.User;
 import world.bentobox.deathchest.DeathChest;
 import world.bentobox.deathchest.Settings;
 import world.bentobox.deathchest.data.DeathChestRecord;
+import world.bentobox.deathchest.util.WorldName;
 
 /**
  * Turns a player's drops into a death chest.
@@ -84,9 +85,10 @@ public class DeathListener implements Listener {
         if (chest == null) {
             user.sendMessage("deathchest.death.stored-virtual", TextVariables.LABEL, label);
         } else {
-            user.sendMessage("deathchest.death.chest-placed", "[world]", chest.getWorld().getName(),
-                    TextVariables.NUMBER, String.valueOf(chest.getBlockX()), "[y]",
-                    String.valueOf(chest.getBlockY()), "[z]", String.valueOf(chest.getBlockZ()));
+            user.sendMessage("deathchest.death.chest-placed", "[world]",
+                    WorldName.of(addon, user, chest.getWorld()), TextVariables.NUMBER,
+                    String.valueOf(chest.getBlockX()), "[y]", String.valueOf(chest.getBlockY()), "[z]",
+                    String.valueOf(chest.getBlockZ()));
             if (!addon.getManager().readItems(record).isEmpty()) {
                 user.sendMessage("deathchest.death.overflow");
             }

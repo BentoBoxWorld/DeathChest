@@ -12,6 +12,7 @@ import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.deathchest.DeathChest;
 import world.bentobox.deathchest.data.DeathChestRecord;
+import world.bentobox.deathchest.util.WorldName;
 
 /**
  * {@code /<gamemode> deathchest} - list your death chests, claim items the addon is holding
@@ -91,8 +92,7 @@ public class DeathChestCommand extends CompositeCommand {
             DeathChestRecord record = chests.get(i);
             Location loc = record.getChestLoc();
             String where = loc == null ? user.getTranslation("deathchest.commands.player.held-by-addon")
-                    : loc.getWorld().getName() + " " + loc.getBlockX() + ", " + loc.getBlockY() + ", "
-                            + loc.getBlockZ();
+                    : WorldName.describe(addon, user, loc);
             user.sendMessage("deathchest.commands.player.entry", TextVariables.NUMBER, String.valueOf(i + 1),
                     TextVariables.DESCRIPTION, where, "[time]", timeLeft(user, record));
         }

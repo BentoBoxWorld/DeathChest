@@ -13,6 +13,7 @@ import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.deathchest.DeathChest;
 import world.bentobox.deathchest.data.DeathChestRecord;
+import world.bentobox.deathchest.util.WorldName;
 
 /**
  * {@code /<gamemode>admin deathchest} - look at, and clean up, players' death chests.
@@ -71,14 +72,10 @@ public class AdminDeathChestCommand extends CompositeCommand {
             Location loc = record.getChestLoc();
             Location death = record.getDeathLoc();
             user.sendMessage("deathchest.commands.admin.entry", TextVariables.NUMBER, String.valueOf(i + 1),
-                    TextVariables.DESCRIPTION, describe(loc), "[death]", describe(death));
+                    TextVariables.DESCRIPTION, WorldName.describe(addon, user, loc), "[death]",
+                    WorldName.describe(addon, user, death));
         }
         return true;
-    }
-
-    private String describe(Location loc) {
-        return loc == null || loc.getWorld() == null ? "-"
-                : loc.getWorld().getName() + " " + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ();
     }
 
     @Override

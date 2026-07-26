@@ -53,6 +53,8 @@ class DeathListenerTest extends CommonTestSetup {
         settings.setNotifyOnDeath(false);
         when(addon.getSettings()).thenReturn(settings);
         when(addon.getManager()).thenReturn(manager);
+        when(addon.getPlugin()).thenReturn(plugin);
+        when(iwm.getFriendlyName(any(org.bukkit.World.class))).thenReturn("AcidIsland");
         when(addon.inGameWorld(any(World.class))).thenReturn(true);
         when(addon.getGameModeLabel(any(World.class))).thenReturn("is");
         // Real item behaviour: the blanket Bukkit deep stubs do not give working ItemStacks
@@ -159,6 +161,7 @@ class DeathListenerTest extends CommonTestSetup {
         settings.setNotifyOnDeath(true);
         World gameWorld = mock(World.class);
         when(gameWorld.getName()).thenReturn("bskyblock_world");
+        when(gameWorld.getEnvironment()).thenReturn(World.Environment.NORMAL);
         record.setChestLoc(new Location(gameWorld, 10, 70, 20));
         mockedBukkit.when(() -> org.bukkit.Bukkit.getWorld(org.mockito.ArgumentMatchers.anyString()))
                 .thenReturn(gameWorld);

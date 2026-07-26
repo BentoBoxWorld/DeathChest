@@ -174,6 +174,39 @@ class DeathChestManagerTest extends CommonTestSetup {
         assertTrue(manager.getChestAt(record.getChestLoc()).isPresent());
     }
 
+    /**
+     * Regression: the chest was placed but always turned up empty. `getInventory()` on a placed
+     * block state is the live tile entity inventory, so items added to it are already in the
+     * world. Calling `update()` afterwards writes the snapshot captured by `getState()` - taken
+     * when the chest was still empty - back over the block and wipes them.
+     */
+    @Test
+    void testItemsAreNotWipedByABlockStateUpdate() {
+        List<ItemStack> drops = new ArrayList<>(List.of(new ItemStack(Material.DIAMOND, 3)));
+
+        manager.createChest(mockPlayer, drops, 0);
+
+        verify(chestInventory).addItem(any(ItemStack[].class));
+        verify(container, never()).update(Mockito.anyBoolean(), Mockito.anyBoolean());
+        verify(container, never()).update(Mockito.anyBoolean());
+        verify(container, never()).update();
+    }
+
+    @Test
+    void testRefillDoesNotWipeTheChestWithAStaleSnapshot() {
+        ItemStack overflow = new ItemStack(Material.COBBLESTONE, 64);
+        when(chestInventory.addItem(any(ItemStack[].class))).thenReturn(new HashMap<>(Map.of(0, overflow)));
+        DeathChestRecord record = manager.createChest(mockPlayer,
+                new ArrayList<>(List.of(new ItemStack(Material.DIAMOND), overflow)), 0);
+        ItemStack[] contents = new ItemStack[27];
+        contents[0] = new ItemStack(Material.DIAMOND);
+        when(chestInventory.getContents()).thenReturn(contents);
+
+        manager.refill(record);
+
+        verify(container, never()).update(Mockito.anyBoolean(), Mockito.anyBoolean());
+    }
+
     @Test
     void testCreateChestWithNoIslandStoresItemsInTheRecord() {
         when(im.getProtectedIslandAt(any(Location.class))).thenReturn(Optional.empty());

@@ -183,10 +183,12 @@ public class DeathChestManager {
             block.setType(Material.AIR, false);
             return false;
         }
-        Inventory inventory = container.getInventory();
+        // getInventory() on a placed block state is the live tile entity inventory, so adding to
+        // it takes effect immediately. Do NOT call container.update() afterwards: update() writes
+        // the snapshot captured by getState() back over the block, and that snapshot was taken
+        // when the chest was empty, so it wipes everything just added.
         List<ItemStack> leftovers = new ArrayList<>(
-                inventory.addItem(items.toArray(new ItemStack[0])).values());
-        container.update(true, false);
+                container.getInventory().addItem(items.toArray(new ItemStack[0])).values());
         items.clear();
         items.addAll(leftovers);
         return true;
@@ -227,9 +229,8 @@ public class DeathChestManager {
         }
         List<ItemStack> stored = readItems(record);
         if (!stored.isEmpty()) {
-            Inventory inventory = container.getInventory();
-            stored = new ArrayList<>(inventory.addItem(stored.toArray(new ItemStack[0])).values());
-            container.update(true, false);
+            // Live inventory - see the note in placeBlock about not calling update() here.
+            stored = new ArrayList<>(container.getInventory().addItem(stored.toArray(new ItemStack[0])).values());
             record.setItems(ItemSerializer.toBase64(stored));
         }
         if (stored.isEmpty() && isInventoryEmpty(container.getInventory()) && record.getExperience() == 0) {
@@ -362,8 +363,8 @@ public class DeathChestManager {
                 readItems(record).forEach(item -> block.getWorld().dropItem(dropAt, item));
                 spawnExperience(dropAt, record.getExperience());
             }
+            // Live inventory - see the note in placeBlock about not calling update() here.
             container.getInventory().clear();
-            container.update(true, false);
             block.setType(Material.AIR, false);
         } else if (drop && record.getDeathLoc() != null && record.getDeathLoc().getWorld() != null) {
             // Virtual chest with nowhere sensible to drop. Nothing to do but let it go.

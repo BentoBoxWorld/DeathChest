@@ -56,9 +56,12 @@ class AdminDeathChestCommandTest extends CommonTestSetup {
         when(plugin.getCommandsManager()).thenReturn(cm);
         when(plugin.getPlayers()).thenReturn(pm);
         when(addon.getManager()).thenReturn(manager);
+        when(addon.getPlugin()).thenReturn(plugin);
+        when(iwm.getFriendlyName(any(org.bukkit.World.class))).thenReturn("AcidIsland");
 
         World gameWorld = mock(World.class);
         when(gameWorld.getName()).thenReturn("bskyblock_world");
+        when(gameWorld.getEnvironment()).thenReturn(World.Environment.NORMAL);
         mockedBukkit.when(() -> org.bukkit.Bukkit.getWorld(anyString())).thenReturn(gameWorld);
 
         when(user.isOp()).thenReturn(true);
@@ -108,7 +111,7 @@ class AdminDeathChestCommandTest extends CommonTestSetup {
 
         verify(user).sendMessage("deathchest.commands.admin.header", "[name]", "someone", "[number]", "1");
         verify(user).sendMessage("deathchest.commands.admin.entry", "[number]", "1", "[description]",
-                "bskyblock_world 3,64,9", "[death]", "bskyblock_world 3,-120,9");
+                "AcidIsland 3, 64, 9", "[death]", "AcidIsland 3, -120, 9");
     }
 
     @Test

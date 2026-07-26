@@ -4,6 +4,9 @@ deathchest:
     stored-virtual: "<gold>There was nowhere to put a death chest, so your items are being held for you. Use <aqua>/[label] deathchest</aqua> to get them back.</gold>"
     overflow: "<gold>Some items would not fit. They will appear in the chest as you empty it.</gold>"
     expires: "<gray>The chest will disappear in [number] minutes.</gray>"
+  world:
+    nether: "Nether"
+    the-end: "The End"
   errors:
     not-your-chest: "<red>This death chest belongs to [name].</red>"
   commands:
