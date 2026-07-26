@@ -27,6 +27,7 @@ class SettingsTest {
         assertEquals("CHEST", settings.getChestMaterial());
         assertTrue(settings.isPlaceAtDeathLocation());
         assertEquals(8, settings.getSearchRadius());
+        assertEquals(16, settings.getSearchDepth());
         assertEquals(60, settings.getExpiryMinutes());
         assertEquals(ExpiryAction.DROP, settings.getExpiryAction());
         assertEquals(60, settings.getExpiryCheckSeconds());
@@ -47,6 +48,16 @@ class SettingsTest {
         assertEquals(32, settings.getSearchRadius());
         settings.setSearchRadius(12);
         assertEquals(12, settings.getSearchRadius());
+    }
+
+    @Test
+    void testSearchDepthIsClamped() {
+        settings.setSearchDepth(0);
+        assertEquals(1, settings.getSearchDepth());
+        settings.setSearchDepth(1000);
+        assertEquals(64, settings.getSearchDepth());
+        settings.setSearchDepth(24);
+        assertEquals(24, settings.getSearchDepth());
     }
 
     @Test

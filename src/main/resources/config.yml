@@ -22,9 +22,16 @@ chest:
   # always fall back to the island home regardless of this setting.
   place-at-death-location: true
   #
-  # How far to look, in blocks, for a free spot to put the chest.
-  # Searched vertically first, then outwards. Range 1 to 32.
+  # How far to look sideways, in blocks, for a free spot to put the chest.
+  # Range 1 to 32.
   search-radius: 8
+  #
+  # How far to look downwards, in blocks, for ground to stand the chest on.
+  # This is what stops a chest ending up far below the player - on the sea bed
+  # under an ocean world, or buried in terrain. If no ground is found within
+  # this distance the chest goes to the player's island instead, which is
+  # usually what you want. Range 1 to 64.
+  search-depth: 16
   #
   # How many minutes a death chest lasts before it expires. 0 means never.
   expiry-minutes: 60

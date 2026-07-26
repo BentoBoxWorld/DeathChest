@@ -120,6 +120,10 @@ class DeathChestManagerTest extends CommonTestSetup {
         when(chestBlock.isReplaceable()).thenReturn(true);
         when(chestBlock.isLiquid()).thenReturn(false);
         when(chestBlock.getRelative(BlockFace.DOWN)).thenReturn(ground);
+        // Open air above, so the spot is not treated as submerged
+        Block above = mock(Block.class);
+        when(above.isLiquid()).thenReturn(false);
+        when(chestBlock.getRelative(BlockFace.UP)).thenReturn(above);
         when(chestBlock.getWorld()).thenReturn(gameWorld);
         when(chestBlock.getLocation()).thenReturn(new Location(gameWorld, 4, SURFACE_Y, 4));
         when(gameWorld.getBlockAt(any(Location.class))).thenReturn(chestBlock);
@@ -127,7 +131,7 @@ class DeathChestManagerTest extends CommonTestSetup {
         when(island.getMemberSet()).thenReturn(ImmutableSet.of(uuid));
         when(island.onIsland(any(Location.class))).thenReturn(true);
         when(island.getUniqueId()).thenReturn("island-1");
-        when(im.getIslandAt(any(Location.class))).thenReturn(Optional.of(island));
+        when(im.getProtectedIslandAt(any(Location.class))).thenReturn(Optional.of(island));
         when(im.getIsland(any(World.class), any(UUID.class))).thenReturn(island);
         when(im.getHomeLocation(island)).thenReturn(new Location(gameWorld, 0, SURFACE_Y, 0));
 
@@ -172,7 +176,7 @@ class DeathChestManagerTest extends CommonTestSetup {
 
     @Test
     void testCreateChestWithNoIslandStoresItemsInTheRecord() {
-        when(im.getIslandAt(any(Location.class))).thenReturn(Optional.empty());
+        when(im.getProtectedIslandAt(any(Location.class))).thenReturn(Optional.empty());
         when(im.getIsland(any(World.class), any(UUID.class))).thenReturn(null);
         List<ItemStack> drops = new ArrayList<>(List.of(new ItemStack(Material.DIAMOND, 3)));
 
@@ -265,7 +269,7 @@ class DeathChestManagerTest extends CommonTestSetup {
         PlayerInventory playerInv = mock(PlayerInventory.class);
         when(playerInv.addItem(any(ItemStack[].class))).thenReturn(new HashMap<>());
         when(mockPlayer.getInventory()).thenReturn(playerInv);
-        when(im.getIslandAt(any(Location.class))).thenReturn(Optional.empty());
+        when(im.getProtectedIslandAt(any(Location.class))).thenReturn(Optional.empty());
         when(im.getIsland(any(World.class), any(UUID.class))).thenReturn(null);
         DeathChestRecord record = manager.createChest(mockPlayer,
                 new ArrayList<>(List.of(new ItemStack(Material.DIAMOND, 2))), 30);
@@ -283,7 +287,7 @@ class DeathChestManagerTest extends CommonTestSetup {
         PlayerInventory playerInv = mock(PlayerInventory.class);
         when(playerInv.addItem(any(ItemStack[].class))).thenReturn(new HashMap<>());
         when(mockPlayer.getInventory()).thenReturn(playerInv);
-        when(im.getIslandAt(any(Location.class))).thenReturn(Optional.empty());
+        when(im.getProtectedIslandAt(any(Location.class))).thenReturn(Optional.empty());
         when(im.getIsland(any(World.class), any(UUID.class))).thenReturn(null);
         DeathChestRecord record = manager.createChest(mockPlayer,
                 new ArrayList<>(List.of(new ItemStack(Material.DIAMOND))), 10);

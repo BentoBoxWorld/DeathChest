@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -58,16 +59,18 @@ public class ChestPlacer {
      */
     public Optional<Placement> findSpot(@NonNull UUID playerUUID, @NonNull Location deathLocation) {
         int radius = addon.getSettings().getSearchRadius();
+        int depth = addon.getSettings().getSearchDepth();
 
-        // Stage 1: the death site, if the player is on an island they belong to.
+        // Stage 1: the death site, if the player died inside the protected part of an island
+        // they belong to. Protected, not just "in island space" - on an ocean game mode the
+        // island's grid square is mostly open sea, which is not somewhere to leave a chest.
         if (addon.getSettings().isPlaceAtDeathLocation()) {
-            Island deathIsland = addon.getIslands().getIslandAt(deathLocation).orElse(null);
+            Island deathIsland = addon.getIslands().getProtectedIslandAt(deathLocation).orElse(null);
             if (deathIsland != null && deathIsland.getMemberSet().contains(playerUUID)) {
-                // Solid ground is required here. A player who fell into the void is inside their
-                // island's column but with nothing under them for hundreds of blocks, and a chest
-                // hanging in the void is no better than losing the items. Failing this check is
-                // exactly what sends the chest to the island instead.
-                Location spot = search(clampToWorld(deathLocation), deathIsland, radius, true);
+                // Solid ground within reach is required here. A player who fell into the void, or
+                // drowned at sea, is inside their island's column with nothing usable under them,
+                // and failing this check is exactly what sends the chest to the island instead.
+                Location spot = search(clampToWorld(deathLocation), deathIsland, radius, depth, true);
                 if (spot != null) {
                     return Optional.of(new Placement(spot, deathIsland, true));
                 }
@@ -93,7 +96,7 @@ public class ChestPlacer {
         }
         // The island may be far from any player, so make sure the chunk is there to build in.
         home.getWorld().getChunkAt(home).load(true);
-        Location spot = search(clampToWorld(home), own, radius, false);
+        Location spot = search(clampToWorld(home), own, radius, depth, false);
         return spot == null ? Optional.empty() : Optional.of(new Placement(spot, own, false));
     }
 
@@ -118,14 +121,15 @@ public class ChestPlacer {
      * @param centre        where to search from
      * @param island        island the spot must stay inside
      * @param radius        how far outwards to search
+     * @param depth         how far down to search for ground
      * @param requireGround if true, only accept a spot with a solid block under it
      * @return a block location, or null if nothing suitable was found
      */
     @Nullable
-    Location search(@NonNull Location centre, @NonNull Island island, int radius, boolean requireGround) {
-        // First pass: a free block sitting on something solid. The column straight down runs to
-        // the world floor, because that is where the items would have fallen to.
-        for (Location candidate : grounded(centre, radius)) {
+    Location search(@NonNull Location centre, @NonNull Island island, int radius, int depth, boolean requireGround) {
+        // First pass: a free block sitting on something solid, scanning downwards because that is
+        // the way the items would have fallen.
+        for (Location candidate : grounded(centre, radius, depth)) {
             if (isUsable(candidate, island) && isGrounded(candidate)) {
                 return candidate;
             }
@@ -143,26 +147,32 @@ public class ChestPlacer {
     }
 
     /**
-     * Candidates for the "standing on something" pass: straight down to the world floor first,
-     * then outwards ring by ring, each ring also scanning down.
+     * Candidates for the "standing on something" pass: straight down first, then outwards ring
+     * by ring, each ring also scanning down.
+     * <p>
+     * The downward scan is bounded by {@code depth} rather than running to the world floor. An
+     * unbounded scan will happily find ground a hundred blocks below the player - the sea bed of
+     * an ocean world, or a pocket inside generated terrain - and a chest there is as good as lost
+     * even though it is technically on the island.
      *
      * @param centre where to search from
      * @param radius how far outwards to search
+     * @param depth  how far down to search
      * @return candidate block locations in preference order
      */
-    private List<Location> grounded(@NonNull Location centre, int radius) {
+    private List<Location> grounded(@NonNull Location centre, int radius, int depth) {
         World world = centre.getWorld();
         int cx = centre.getBlockX();
         int cy = centre.getBlockY();
         int cz = centre.getBlockZ();
-        int min = world.getMinHeight();
+        int lowest = Math.max(world.getMinHeight() + 1, cy - depth);
 
         List<Location> list = new ArrayList<>();
-        for (int y = cy; y > min; y--) {
+        for (int y = cy; y >= lowest; y--) {
             list.add(new Location(world, cx, y, cz));
         }
         forEachRing(radius, (dx, dz) -> {
-            for (int y = cy; y > min; y--) {
+            for (int y = cy; y >= lowest; y--) {
                 list.add(new Location(world, cx + dx, y, cz + dz));
             }
         });
@@ -224,7 +234,8 @@ public class ChestPlacer {
     /**
      * @param location candidate location
      * @param island   island the location must be inside
-     * @return true if a chest can be put here without destroying anything
+     * @return true if a chest can be put here without destroying anything, and a player can get
+     *         to it
      */
     private boolean isUsable(@NonNull Location location, @NonNull Island island) {
         if (!island.onIsland(location)) {
@@ -232,7 +243,12 @@ public class ChestPlacer {
         }
         Block block = location.getBlock();
         // Liquids are replaceable but a chest in lava is not somewhere a player wants to swim.
-        return block.isReplaceable() && !block.isLiquid();
+        if (!block.isReplaceable() || block.isLiquid()) {
+            return false;
+        }
+        // Nor is a chest on the sea bed. A liquid directly above means this spot is submerged,
+        // which on an ocean game mode is most of the world.
+        return !block.getRelative(BlockFace.UP).isLiquid();
     }
 
     /**
@@ -243,6 +259,6 @@ public class ChestPlacer {
         if (location.getBlockY() <= location.getWorld().getMinHeight()) {
             return false;
         }
-        return location.getBlock().getRelative(org.bukkit.block.BlockFace.DOWN).isSolid();
+        return location.getBlock().getRelative(BlockFace.DOWN).isSolid();
     }
 }

@@ -21,17 +21,19 @@ stops mattering at all.
 
 DeathChest decides *where* the chest goes using BentoBox's island data:
 
-1. **The death site**, if the player is a member of the island there **and** there is solid
-   ground within the search radius. This is the normal case - you died on your island, your
-   stuff is where you died.
+1. **The death site**, if the player died inside the *protected* part of an island they belong
+   to **and** there is reachable ground within the search depth. This is the normal case - you
+   died on your island, your stuff is where you died.
 2. **Your own island** otherwise. Void deaths, lava deaths, deaths on someone else's island and
    deaths in the wild all put the chest next to your island home, where you respawn anyway.
 3. **Held for you** if you have no island at all. The items sit in the addon's database and you
    get them back with `/<gamemode> deathchest claim 1`.
 
-The "solid ground required at the death site" rule is the important one: it is exactly what
-stops a void death leaving a chest hanging in empty space, and what routes it to your island
-instead.
+The "reachable ground required at the death site" rule is the important one. A spot only counts
+if it has something solid under it, is within `chest.search-depth` blocks below the player, and
+is not submerged. Failing any of those is exactly what routes a chest to your island rather than
+leaving it hanging in the void, resting on the sea bed, or buried in terrain a hundred blocks
+down.
 
 Everything else is ordinary death chest behaviour: a timer, experience storage, protection from
 other players and from explosions, and a command to list where your chests are.
@@ -58,6 +60,7 @@ See `config.yml`. The settings worth knowing about:
 | `chest.material` | `CHEST` | `BARREL` opens even with a block above it, which suits cramped islands |
 | `chest.place-at-death-location` | `true` | Set false to always send chests to the island home |
 | `chest.search-radius` | `8` | How far to look sideways for a free block |
+| `chest.search-depth` | `16` | How far to look down for ground. Beyond this the chest goes to the island |
 | `chest.expiry-minutes` | `60` | `0` never expires |
 | `chest.expiry-action` | `DROP` | `DROP` spills the contents, `DELETE` destroys them |
 | `chest.max-per-player` | `3` | Older chests expire early past this, `0` is unlimited |

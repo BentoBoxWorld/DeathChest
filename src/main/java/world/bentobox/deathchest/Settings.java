@@ -55,10 +55,19 @@ public class Settings implements ConfigObject {
     private boolean placeAtDeathLocation = true;
 
     @ConfigComment("")
-    @ConfigComment("How far to look, in blocks, for a free spot to put the chest.")
-    @ConfigComment("Searched vertically first, then outwards. Range 1 to 32.")
+    @ConfigComment("How far to look sideways, in blocks, for a free spot to put the chest.")
+    @ConfigComment("Range 1 to 32.")
     @ConfigEntry(path = "chest.search-radius")
     private int searchRadius = 8;
+
+    @ConfigComment("")
+    @ConfigComment("How far to look downwards, in blocks, for ground to stand the chest on.")
+    @ConfigComment("This is what stops a chest ending up far below the player - on the sea bed")
+    @ConfigComment("under an ocean world, or buried in terrain. If no ground is found within")
+    @ConfigComment("this distance the chest goes to the player's island instead, which is")
+    @ConfigComment("usually what you want. Range 1 to 64.")
+    @ConfigEntry(path = "chest.search-depth")
+    private int searchDepth = 16;
 
     @ConfigComment("")
     @ConfigComment("How many minutes a death chest lasts before it expires. 0 means never.")
@@ -153,6 +162,17 @@ public class Settings implements ConfigObject {
 
     public void setSearchRadius(int searchRadius) {
         this.searchRadius = searchRadius;
+    }
+
+    /**
+     * @return the downwards search distance, clamped to a sane 1 to 64 blocks
+     */
+    public int getSearchDepth() {
+        return Math.clamp(searchDepth, 1, 64);
+    }
+
+    public void setSearchDepth(int searchDepth) {
+        this.searchDepth = searchDepth;
     }
 
     public int getExpiryMinutes() {
