@@ -1,0 +1,66 @@
+# DeathChest addon configuration file
+#
+# DeathChest saves a player's items into a chest when they die instead of
+# dropping them. Unlike generic death chest plugins, it understands islands:
+# if the player dies in the void, in lava, or somewhere they cannot build,
+# the chest is placed on their own island instead of being lost.
+#
+# Game modes listed here are ignored by DeathChest. Example:
+# disabled-gamemodes:
+#   - BSkyBlock
+disabled-gamemodes: []
+chest:
+  #
+  # The block used for the death chest.
+  # CHEST is the classic look. BARREL is a good choice for cramped islands
+  # because it can be opened even with a block directly above it.
+  material: CHEST
+  #
+  # Place the chest where the player died, if that is a spot they can reach
+  # and build in. If false, the chest is always placed at the player's island home.
+  # Deaths in the void, outside a build-allowed area, or in an unreachable spot
+  # always fall back to the island home regardless of this setting.
+  place-at-death-location: true
+  #
+  # How far to look, in blocks, for a free spot to put the chest.
+  # Searched vertically first, then outwards. Range 1 to 32.
+  search-radius: 8
+  #
+  # How many minutes a death chest lasts before it expires. 0 means never.
+  expiry-minutes: 60
+  #
+  # What to do when a death chest expires.
+  # DROP   - break the chest and let the items drop on the ground
+  # DELETE - remove the chest and its contents
+  expiry-action: DROP
+  #
+  # How often, in seconds, to check for expired chests.
+  expiry-check-seconds: 60
+  #
+  # Maximum number of death chests a player may have at once.
+  # When exceeded, the oldest chest is expired early. 0 means unlimited.
+  max-per-player: 3
+  #
+  # Let island team members open each other's death chests.
+  # If false, only the owner can open their own chest.
+  team-access: true
+  #
+  # Stop death chests being blown up by creepers, TNT and so on.
+  protect-from-explosions: true
+experience:
+  #
+  # Store the player's experience in the chest and give it back when it is opened.
+  store: true
+  #
+  # Percentage of the player's experience to store. 0 to 100.
+  # The remainder is lost, which keeps some sting in dying.
+  percent: 100
+notify:
+  #
+  # Tell the player where their death chest is when they die.
+  on-death: true
+commands:
+  #
+  # Allow '/[label] deathchest tp <number>' to teleport the player to their chest.
+  # Players still need the [gamemode].deathchest.teleport permission.
+  allow-teleport: true

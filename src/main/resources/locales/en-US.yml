@@ -1,0 +1,32 @@
+deathchest:
+  death:
+    chest-placed: "<green>Your items are in a death chest at <aqua>[world] [number], [y], [z]</aqua>.</green>"
+    stored-virtual: "<gold>There was nowhere to put a death chest, so your items are being held for you. Use <aqua>/[label] deathchest</aqua> to get them back.</gold>"
+    overflow: "<gold>Some items would not fit. They will appear in the chest as you empty it.</gold>"
+    expires: "<gray>The chest will disappear in [number] minutes.</gray>"
+  errors:
+    not-your-chest: "<red>This death chest belongs to [name].</red>"
+  commands:
+    player:
+      description: "list your death chests and get your items back"
+      parameters: "[claim|tp] [number]"
+      header: "<green>You have [number] death chest(s):</green>"
+      entry: "<aqua>[number].</aqua> <white>[description]</white> <gray>([time])</gray>"
+      footer: "<gray>Use <aqua>/[label] deathchest claim 1</aqua> to collect held items, or <aqua>/[label] deathchest tp 1</aqua> to visit one.</gray>"
+      none: "<gray>You have no death chests.</gray>"
+      held-by-addon: "held for you"
+      never-expires: "does not expire"
+      minutes-left: "[number] min left"
+      unknown-number: "<red>There is no death chest number [number].</red>"
+      claimed: "<green>You received [number] item stack(s).</green>"
+      nothing-to-claim: "<gray>Nothing is being held for that chest - go and open it.</gray>"
+      no-block-to-visit: "<red>That death chest has no block in the world. Claim it instead.</red>"
+      teleported: "<green>Teleported to your death chest.</green>"
+    admin:
+      description: "list and purge death chests"
+      parameters: "[player|purge]"
+      summary: "<green>There are [number] death chest(s) stored.</green>"
+      none: "<gray>[name] has no death chests.</gray>"
+      header: "<green>[name] has [number] death chest(s):</green>"
+      entry: "<aqua>[number].</aqua> <white>chest: [description]</white> <gray>died at: [death]</gray>"
+      purged: "<green>Expired [number] death chest(s).</green>"

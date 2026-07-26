@@ -1,0 +1,16 @@
+target/
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+bin/
+.DS_Store
+# Artifacts left in the working directory by the test suite
+/database/
+/database_backup/
+/addons/
+/addon.jar
+/config.yml

@@ -1,0 +1,22 @@
+name: DeathChest
+main: world.bentobox.deathchest.DeathChest
+version: ${version}${build.number}
+api-version: 3.18.0
+metrics: true
+icon: CHEST
+repository: "BentoBoxWorld/DeathChest"
+
+prefix: DeathChest
+
+authors: tastybento
+
+permissions:
+  '[gamemode].deathchest':
+    description: Allow use of the '/[label] deathchest' command to list and recover death chests
+    default: true
+  '[gamemode].deathchest.teleport':
+    description: Allow use of '/[label] deathchest tp <number>' to teleport to a death chest
+    default: true
+  '[gamemode].admin.deathchest':
+    description: Allow use of '/[label] deathchest' admin command
+    default: op
