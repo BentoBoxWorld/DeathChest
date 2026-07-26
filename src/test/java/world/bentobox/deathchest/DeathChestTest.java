@@ -17,6 +17,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -49,6 +51,12 @@ class DeathChestTest extends CommonTestSetup {
 
     private DeathChest addon;
     private MockedStatic<DatabaseSetup> mockDb;
+
+    /** Real backing maps, so command registration on the mocked parents is observable. */
+    private final Map<String, CompositeCommand> playerSubCommands = new LinkedHashMap<>();
+    private final Map<String, CompositeCommand> playerAliases = new LinkedHashMap<>();
+    private final Map<String, CompositeCommand> adminSubCommands = new LinkedHashMap<>();
+    private final Map<String, CompositeCommand> adminAliases = new LinkedHashMap<>();
 
     @Mock
     private FlagsManager flagsManager;
@@ -93,6 +101,15 @@ class DeathChestTest extends CommonTestSetup {
         when(gameMode.getAdminCommand()).thenReturn(Optional.of(adminCommand));
         when(gameMode.inWorld(any(World.class))).thenReturn(true);
         when(playerCommand.getLabel()).thenReturn("is");
+        when(playerCommand.getTopLabel()).thenReturn("ai");
+        when(adminCommand.getTopLabel()).thenReturn("aiadmin");
+        // The game mode's permission prefix is what addon sub-commands inherit
+        when(playerCommand.getPermissionPrefix()).thenReturn("acidisland.");
+        when(adminCommand.getPermissionPrefix()).thenReturn("acidisland.");
+        when(playerCommand.getSubCommands()).thenReturn(playerSubCommands);
+        when(playerCommand.getSubCommandAliases()).thenReturn(playerAliases);
+        when(adminCommand.getSubCommands()).thenReturn(adminSubCommands);
+        when(adminCommand.getSubCommandAliases()).thenReturn(adminAliases);
         when(plugin.getAddonsManager()).thenReturn(am);
         when(am.getGameModeAddons()).thenReturn(List.of(gameMode));
 
@@ -160,6 +177,45 @@ class DeathChestTest extends CommonTestSetup {
         assertNotEquals(State.DISABLED, addon.getState());
         assertEquals(1, addon.getGameModes().size());
         assertNotNull(addon.getManager());
+    }
+
+    /**
+     * The commands have to end up in the parent command's sub-command map, or they exist but
+     * nothing can reach them. A plain Mockito mock hands back a throwaway empty map for every
+     * getSubCommands() call, so the registration would silently go nowhere - the maps are
+     * stubbed with real ones here so the wiring is actually observable.
+     */
+    @Test
+    void testCommandsAreRegisteredUnderTheGameMode() {
+        addon.onLoad();
+        addon.setState(State.ENABLED);
+        addon.onEnable();
+
+        assertTrue(playerSubCommands.containsKey("deathchest"),
+                "The player command must be a sub-command of the game mode's player command");
+        assertTrue(adminSubCommands.containsKey("deathchest"),
+                "The admin command must be a sub-command of the game mode's admin command");
+    }
+
+    @Test
+    void testCommandAliasesAreRegistered() {
+        addon.onLoad();
+        addon.setState(State.ENABLED);
+        addon.onEnable();
+
+        assertTrue(playerAliases.containsKey("deaths"));
+        assertTrue(playerAliases.containsKey("grave"));
+        assertTrue(adminAliases.containsKey("deathchests"));
+    }
+
+    @Test
+    void testRegisteredCommandsCarryTheGameModePermission() {
+        addon.onLoad();
+        addon.setState(State.ENABLED);
+        addon.onEnable();
+
+        assertEquals("acidisland.deathchest", playerSubCommands.get("deathchest").getPermission());
+        assertEquals("acidisland.admin.deathchest", adminSubCommands.get("deathchest").getPermission());
     }
 
     @Test
