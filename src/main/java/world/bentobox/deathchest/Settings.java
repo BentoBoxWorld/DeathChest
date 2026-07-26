@@ -27,6 +27,7 @@ public class Settings implements ConfigObject {
     }
 
     @ConfigComment("DeathChest addon configuration file")
+    @ConfigComment("See the documentation at https://docs.bentobox.world/en/latest/addons/DeathChest/")
     @ConfigComment("")
     @ConfigComment("DeathChest saves a player's items into a chest when they die instead of")
     @ConfigComment("dropping them. Unlike generic death chest plugins, it understands islands:")

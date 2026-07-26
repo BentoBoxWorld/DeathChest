@@ -1,4 +1,5 @@
 # DeathChest addon configuration file
+# See the documentation at https://docs.bentobox.world/en/latest/addons/DeathChest/
 #
 # DeathChest saves a player's items into a chest when they die instead of
 # dropping them. Unlike generic death chest plugins, it understands islands:
