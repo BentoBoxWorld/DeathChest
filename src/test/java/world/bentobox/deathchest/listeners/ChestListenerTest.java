@@ -52,7 +52,7 @@ class ChestListenerTest extends CommonTestSetup {
 
     private Settings settings;
     private ChestListener listener;
-    private DeathChestRecord record;
+    private DeathChestRecord chest;
     private World gameWorld;
     private Location chestLocation;
 
@@ -72,10 +72,10 @@ class ChestListenerTest extends CommonTestSetup {
         when(chestBlock.getWorld()).thenReturn(gameWorld);
         when(chestBlock.getType()).thenReturn(Material.CHEST);
 
-        record = new DeathChestRecord();
-        record.setOwnerUUID(uuid);
-        record.setOwnerName("tastybento");
-        when(manager.getChestAt(any(Location.class))).thenReturn(Optional.of(record));
+        chest = new DeathChestRecord();
+        chest.setOwnerUUID(uuid);
+        chest.setOwnerName("tastybento");
+        when(manager.getChestAt(any(Location.class))).thenReturn(Optional.of(chest));
 
         when(island.getMemberSet()).thenReturn(ImmutableSet.of(uuid));
         when(im.getIslandAt(any(Location.class))).thenReturn(Optional.of(island));
@@ -94,12 +94,12 @@ class ChestListenerTest extends CommonTestSetup {
         listener.onInteract(e);
 
         assertFalse(e.isCancelled());
-        verify(manager).giveExperience(mockPlayer, record);
+        verify(manager).giveExperience(mockPlayer, chest);
     }
 
     @Test
     void testStrangerIsBlocked() {
-        record.setOwnerUUID(UUID.randomUUID());
+        chest.setOwnerUUID(UUID.randomUUID());
         when(island.getMemberSet()).thenReturn(ImmutableSet.of());
         PlayerInteractEvent e = interact();
 
@@ -112,8 +112,8 @@ class ChestListenerTest extends CommonTestSetup {
     @Test
     void testTeamMateMayOpenWhenTeamAccessIsOn() {
         UUID owner = UUID.randomUUID();
-        record.setOwnerUUID(owner);
-        record.setChestLoc(chestLocation);
+        chest.setOwnerUUID(owner);
+        chest.setChestLoc(chestLocation);
         when(island.getMemberSet()).thenReturn(ImmutableSet.of(owner, uuid));
         PlayerInteractEvent e = interact();
 
@@ -126,8 +126,8 @@ class ChestListenerTest extends CommonTestSetup {
     void testTeamMateIsBlockedWhenTeamAccessIsOff() {
         settings.setTeamAccess(false);
         UUID owner = UUID.randomUUID();
-        record.setOwnerUUID(owner);
-        record.setChestLoc(chestLocation);
+        chest.setOwnerUUID(owner);
+        chest.setChestLoc(chestLocation);
         when(island.getMemberSet()).thenReturn(ImmutableSet.of(owner, uuid));
         PlayerInteractEvent e = interact();
 
@@ -164,13 +164,13 @@ class ChestListenerTest extends CommonTestSetup {
         listener.onBreak(e);
 
         assertFalse(e.isCancelled());
-        verify(manager).claim(mockPlayer, record);
-        verify(manager).delete(record);
+        verify(manager).claim(mockPlayer, chest);
+        verify(manager).delete(chest);
     }
 
     @Test
     void testStrangerMayNotBreakTheChest() {
-        record.setOwnerUUID(UUID.randomUUID());
+        chest.setOwnerUUID(UUID.randomUUID());
         when(island.getMemberSet()).thenReturn(ImmutableSet.of());
         BlockBreakEvent e = new BlockBreakEvent(chestBlock, mockPlayer);
 
@@ -191,7 +191,7 @@ class ChestListenerTest extends CommonTestSetup {
 
         listener.onClose(e);
 
-        verify(manager).refill(record);
+        verify(manager).refill(chest);
     }
 
     @Test
@@ -230,7 +230,7 @@ class ChestListenerTest extends CommonTestSetup {
 
     @Test
     void testChestWithNoOwnerIsOpenToAnyone() {
-        record.setOwner(null);
-        assertTrue(listener.canAccess(mockPlayer, record));
+        chest.setOwner(null);
+        assertTrue(listener.canAccess(mockPlayer, chest));
     }
 }

@@ -1,0 +1,35 @@
+deathchest:
+  death:
+    chest-placed: "<green>Ваши вещи находятся в сундуке смерти в <aqua>[world] [number], [y], [z]</aqua>.</green>"
+    stored-virtual: "<gold>Нет места для размещения сундука, поэтому ваши вещи хранятся для вас. Используйте <aqua>/[label] deathchest</aqua> для их получения.</gold>"
+    overflow: "<gold>Некоторые предметы не поместились. Они появятся в сундуке по мере его опустошения.</gold>"
+    expires: "<gray>Сундук исчезнет через [number] минут.</gray>"
+  world:
+    nether: "Ад"
+    the-end: "Край"
+  errors:
+    not-your-chest: "<red>Этот сундук смерти принадлежит [name].</red>"
+  commands:
+    player:
+      description: "список ваших сундуков смерти и получение предметов"
+      parameters: "[claim|tp] [number]"
+      header: "<green>У вас есть [number] сундук(и) смерти:</green>"
+      entry: "<aqua>[number].</aqua> <white>[description]</white> <gray>([time])</gray>"
+      footer: "<gray>Используйте <aqua>/[label] deathchest claim 1</aqua> для сбора предметов или <aqua>/[label] deathchest tp 1</aqua> для посещения.</gray>"
+      none: "<gray>У вас нет сундуков смерти.</gray>"
+      held-by-addon: "хранится для вас"
+      never-expires: "не исчезает"
+      minutes-left: "[number] мин осталось"
+      unknown-number: "<red>Нет сундука смерти под номером [number].</red>"
+      claimed: "<green>Вы получили [number] стопку(и) предметов.</green>"
+      nothing-to-claim: "<gray>Для этого сундука нет хранимых предметов - откройте его сами.</gray>"
+      no-block-to-visit: "<red>Этот сундук смерти отсутствует в мире. Заберите его вместо этого.</red>"
+      teleported: "<green>Телепортированы на ваш сундук смерти.</green>"
+    admin:
+      description: "список и удаление сундуков смерти"
+      parameters: "[player|purge]"
+      summary: "<green>Хранится [number] сундук(и) смерти.</green>"
+      none: "<gray>У [name] нет сундуков смерти.</gray>"
+      header: "<green>У [name] есть [number] сундук(и) смерти:</green>"
+      entry: "<aqua>[number].</aqua> <white>сундук: [description]</white> <gray>погиб в: [death]</gray>"
+      purged: "<green>Удалено [number] сундук(и) смерти.</green>"

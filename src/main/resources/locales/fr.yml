@@ -1,0 +1,35 @@
+deathchest:
+  death:
+    chest-placed: "<green>Vos objets sont dans un coffre de mort à <aqua>[world] [number], [y], [z]</aqua>.</green>"
+    stored-virtual: "<gold>Il n'y avait nulle part pour mettre un coffre de mort, donc vos objets sont stockés pour vous. Utilisez <aqua>/[label] deathchest</aqua> pour les récupérer.</gold>"
+    overflow: "<gold>Certains objets ne rentraient pas. Ils apparaîtront dans le coffre à mesure que vous le viderez.</gold>"
+    expires: "<gray>Le coffre disparaîtra dans [number] minutes.</gray>"
+  world:
+    nether: "Nether"
+    the-end: "The End"
+  errors:
+    not-your-chest: "<red>Ce coffre de mort appartient à [name].</red>"
+  commands:
+    player:
+      description: "liste vos coffres de mort et récupère vos objets"
+      parameters: "[claim|tp] [number]"
+      header: "<green>Vous avez [number] coffre(s) de mort:</green>"
+      entry: "<aqua>[number].</aqua> <white>[description]</white> <gray>([time])</gray>"
+      footer: "<gray>Utilisez <aqua>/[label] deathchest claim 1</aqua> pour collecter les objets stockés, ou <aqua>/[label] deathchest tp 1</aqua> pour visiter un.</gray>"
+      none: "<gray>Vous n'avez pas de coffres de mort.</gray>"
+      held-by-addon: "gardé pour vous"
+      never-expires: "n'expire pas"
+      minutes-left: "[number] min restantes"
+      unknown-number: "<red>Il n'y a pas de coffre de mort numéro [number].</red>"
+      claimed: "<green>Vous avez reçu [number] pile(s) d'objet(s).</green>"
+      nothing-to-claim: "<gray>Rien n'est gardé pour ce coffre - allez l'ouvrir.</gray>"
+      no-block-to-visit: "<red>Ce coffre de mort n'a pas de bloc dans le monde. Réclamez-le à la place.</red>"
+      teleported: "<green>Téléporté à votre coffre de mort.</green>"
+    admin:
+      description: "liste et purge les coffres de mort"
+      parameters: "[player|purge]"
+      summary: "<green>Il y a [number] coffre(s) de mort stocké(s).</green>"
+      none: "<gray>[name] n'a pas de coffres de mort.</gray>"
+      header: "<green>[name] a [number] coffre(s) de mort:</green>"
+      entry: "<aqua>[number].</aqua> <white>coffre: [description]</white> <gray>mort à: [death]</gray>"
+      purged: "<green>Expiré [number] coffre(s) de mort.</green>"

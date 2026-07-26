@@ -1,0 +1,35 @@
+deathchest:
+  death:
+    chest-placed: "<green>Vaše věci jsou v truhle smrti na <aqua>[world] [number], [y], [z]</aqua>.</green>"
+    stored-virtual: "<gold>Nebylo se kam márnici umístit, takže vaše věci jsou nyní uschovány. Použijte <aqua>/[label] deathchest</aqua> abyste je dostali zpět.</gold>"
+    overflow: "<gold>Některé věci se nevešly. Budou se objevovat v truhle, jakmile ji budete vyprazdňovat.</gold>"
+    expires: "<gray>Truhla zmizí za [number] minut.</gray>"
+  world:
+    nether: "Nether"
+    the-end: "End"
+  errors:
+    not-your-chest: "<red>Tato truhla smrti patří hráči [name].</red>"
+  commands:
+    player:
+      description: "seznam vašich truhel smrti a obnovení vašich věcí"
+      parameters: "[claim|tp] [number]"
+      header: "<green>Máte [number] truhel smrti:</green>"
+      entry: "<aqua>[number].</aqua> <white>[description]</white> <gray>([time])</gray>"
+      footer: "<gray>Použijte <aqua>/[label] deathchest claim 1</aqua> pro obnovení zadržených věcí, nebo <aqua>/[label] deathchest tp 1</aqua> k návštěvě jedné.</gray>"
+      none: "<gray>Nemáte žádné truhly smrti.</gray>"
+      held-by-addon: "uschovány pro vás"
+      never-expires: "neexpiruje"
+      minutes-left: "[number] min zbývá"
+      unknown-number: "<red>Neexistuje žádná truhla smrti číslo [number].</red>"
+      claimed: "<green>Obdrželi jste [number] stack(y) věcí.</green>"
+      nothing-to-claim: "<gray>Pro tuto truhlu není nic k obnovení - jděte si ji otevřít.</gray>"
+      no-block-to-visit: "<red>Tato truhla smrti nemá blok na světě. Místo toho si ji vezměte.</red>"
+      teleported: "<green>Teleportováno k vaší truhle smrti.</green>"
+    admin:
+      description: "seznam a smazání truhel smrti"
+      parameters: "[player|purge]"
+      summary: "<green>Je uloženo [number] truhel smrti.</green>"
+      none: "<gray>Hráč [name] nemá žádné truhly smrti.</gray>"
+      header: "<green>Hráč [name] má [number] truhel smrti:</green>"
+      entry: "<aqua>[number].</aqua> <white>truhla: [description]</white> <gray>zemřel v: [death]</gray>"
+      purged: "<green>Smazáno [number] truhel smrti.</green>"

@@ -12,6 +12,7 @@ import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.deathchest.DeathChest;
 import world.bentobox.deathchest.data.DeathChestRecord;
+import world.bentobox.deathchest.util.WorldName;
 
 /**
  * {@code /<gamemode> deathchest} - list your death chests, claim items the addon is holding
@@ -88,27 +89,26 @@ public class DeathChestCommand extends CompositeCommand {
         user.sendMessage("deathchest.commands.player.header", TextVariables.NUMBER,
                 String.valueOf(chests.size()));
         for (int i = 0; i < chests.size(); i++) {
-            DeathChestRecord record = chests.get(i);
-            Location loc = record.getChestLoc();
+            DeathChestRecord chest = chests.get(i);
+            Location loc = chest.getChestLoc();
             String where = loc == null ? user.getTranslation("deathchest.commands.player.held-by-addon")
-                    : loc.getWorld().getName() + " " + loc.getBlockX() + ", " + loc.getBlockY() + ", "
-                            + loc.getBlockZ();
+                    : WorldName.describe(addon, user, loc);
             user.sendMessage("deathchest.commands.player.entry", TextVariables.NUMBER, String.valueOf(i + 1),
-                    TextVariables.DESCRIPTION, where, "[time]", timeLeft(user, record));
+                    TextVariables.DESCRIPTION, where, "[time]", timeLeft(user, chest));
         }
         user.sendMessage("deathchest.commands.player.footer", TextVariables.LABEL, getTopLabel());
     }
 
     /**
      * @param user   player, for translations
-     * @param record chest record
+     * @param chest  chest record
      * @return a human readable time until expiry
      */
-    private String timeLeft(User user, DeathChestRecord record) {
-        if (record.getExpiryTime() == 0) {
+    private String timeLeft(User user, DeathChestRecord chest) {
+        if (chest.getExpiryTime() == 0) {
             return user.getTranslation("deathchest.commands.player.never-expires");
         }
-        long minutes = Math.max(0, (record.getExpiryTime() - System.currentTimeMillis()) / 60_000L);
+        long minutes = Math.max(0, (chest.getExpiryTime() - System.currentTimeMillis()) / 60_000L);
         return user.getTranslation("deathchest.commands.player.minutes-left", TextVariables.NUMBER,
                 String.valueOf(minutes));
     }
@@ -117,19 +117,19 @@ public class DeathChestCommand extends CompositeCommand {
      * Hand over whatever the addon is holding for this chest.
      *
      * @param user   player
-     * @param record chest record
+     * @param chest  chest record
      * @return true
      */
-    private boolean claim(User user, DeathChestRecord record) {
-        int given = addon.getManager().claim(user.getPlayer(), record);
+    private boolean claim(User user, DeathChestRecord chest) {
+        int given = addon.getManager().claim(user.getPlayer(), chest);
         if (given == 0) {
             user.sendMessage("deathchest.commands.player.nothing-to-claim");
         } else {
             user.sendMessage("deathchest.commands.player.claimed", TextVariables.NUMBER, String.valueOf(given));
         }
         // A chest with no block behind it is finished once it has been emptied.
-        if (record.isVirtual()) {
-            addon.getManager().delete(record);
+        if (chest.isVirtual()) {
+            addon.getManager().delete(chest);
         }
         return true;
     }
@@ -138,15 +138,15 @@ public class DeathChestCommand extends CompositeCommand {
      * Teleport the player to a chest that exists in the world.
      *
      * @param user   player
-     * @param record chest record
+     * @param chest  chest record
      * @return true if the teleport was started
      */
-    private boolean teleport(User user, DeathChestRecord record) {
+    private boolean teleport(User user, DeathChestRecord chest) {
         if (!addon.getSettings().isAllowTeleport() || !user.hasPermission(getPermissionPrefix() + "deathchest.teleport")) {
             user.sendMessage("general.errors.no-permission");
             return false;
         }
-        Location loc = record.getChestLoc();
+        Location loc = chest.getChestLoc();
         if (loc == null) {
             user.sendMessage("deathchest.commands.player.no-block-to-visit");
             return false;

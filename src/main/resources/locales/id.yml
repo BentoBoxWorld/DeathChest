@@ -1,0 +1,35 @@
+deathchest:
+  death:
+    chest-placed: "<green>Item-item Anda ada di peti kematian di <aqua>[world] [number], [y], [z]</aqua>.</green>"
+    stored-virtual: "<gold>Tidak ada tempat untuk meletakkan peti kematian, jadi item-item Anda sedang disimpan untuk Anda. Gunakan <aqua>/[label] deathchest</aqua> untuk mengambilnya kembali.</gold>"
+    overflow: "<gold>Beberapa item tidak muat. Mereka akan muncul di peti saat Anda mengosongkannya.</gold>"
+    expires: "<gray>Peti akan hilang dalam [number] menit.</gray>"
+  world:
+    nether: "Nether"
+    the-end: "The End"
+  errors:
+    not-your-chest: "<red>Peti kematian ini milik [name].</red>"
+  commands:
+    player:
+      description: "lihat peti-peti kematian Anda dan ambil item Anda kembali"
+      parameters: "[claim|tp] [number]"
+      header: "<green>Anda memiliki [number] peti kematian:</green>"
+      entry: "<aqua>[number].</aqua> <white>[description]</white> <gray>([time])</gray>"
+      footer: "<gray>Gunakan <aqua>/[label] deathchest claim 1</aqua> untuk mengumpulkan item yang disimpan, atau <aqua>/[label] deathchest tp 1</aqua> untuk mengunjungi salah satu.</gray>"
+      none: "<gray>Anda tidak memiliki peti kematian.</gray>"
+      held-by-addon: "disimpan untuk Anda"
+      never-expires: "tidak pernah kadaluarsa"
+      minutes-left: "[number] mnt tersisa"
+      unknown-number: "<red>Tidak ada peti kematian nomor [number].</red>"
+      claimed: "<green>Anda menerima [number] tumpukan item.</green>"
+      nothing-to-claim: "<gray>Tidak ada yang disimpan untuk peti ini - buka saja.</gray>"
+      no-block-to-visit: "<red>Peti kematian ini tidak memiliki blok di dunia. Ambil saja.</red>"
+      teleported: "<green>Teleportasi ke peti kematian Anda.</green>"
+    admin:
+      description: "lihat dan bersihkan peti-peti kematian"
+      parameters: "[player|purge]"
+      summary: "<green>Ada [number] peti kematian yang disimpan.</green>"
+      none: "<gray>[name] tidak memiliki peti kematian.</gray>"
+      header: "<green>[name] memiliki [number] peti kematian:</green>"
+      entry: "<aqua>[number].</aqua> <white>peti: [description]</white> <gray>meninggal di: [death]</gray>"
+      purged: "<green>Peti kematian yang kadaluarsa dihapus [number] buah.</green>"

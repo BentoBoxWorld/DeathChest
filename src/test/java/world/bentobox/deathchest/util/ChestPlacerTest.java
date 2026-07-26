@@ -8,8 +8,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -48,6 +50,8 @@ class ChestPlacerTest extends CommonTestSetup {
     private World gameWorld;
     /** Blocks that are solid, keyed by "x:y:z". Everything else is air. */
     private final Map<String, Boolean> solid = new HashMap<>();
+    /** Blocks that are liquid, keyed by "x:y:z". */
+    private final Set<String> liquid = new HashSet<>();
 
     @BeforeEach
     @Override
@@ -95,9 +99,12 @@ class ChestPlacerTest extends CommonTestSetup {
         boolean isSolid = solid.getOrDefault(key(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()), false);
         when(b.isSolid()).thenReturn(isSolid);
         when(b.isReplaceable()).thenReturn(!isSolid);
-        when(b.isLiquid()).thenReturn(false);
+        when(b.isLiquid()).thenReturn(liquid.contains(key(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())));
         when(b.getRelative(BlockFace.DOWN))
                 .thenAnswer(i -> block(new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY() - 1,
+                        loc.getBlockZ())));
+        when(b.getRelative(BlockFace.UP))
+                .thenAnswer(i -> block(new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY() + 1,
                         loc.getBlockZ())));
         return b;
     }
@@ -106,7 +113,7 @@ class ChestPlacerTest extends CommonTestSetup {
     void testDeathOnOwnIslandPlacesChestThere() {
         // Standing on the island surface
         Location death = new Location(gameWorld, 2, ISLAND_SURFACE_Y + 1, 2);
-        when(im.getIslandAt(death)).thenReturn(Optional.of(island));
+        when(im.getProtectedIslandAt(death)).thenReturn(Optional.of(island));
 
         Optional<Placement> result = placer.findSpot(uuid, death);
 
@@ -120,7 +127,7 @@ class ChestPlacerTest extends CommonTestSetup {
     void testVoidDeathFallsBackToTheIsland() {
         // Fell off the island: below the world floor, nothing solid in the whole column
         Location death = new Location(gameWorld, 200, -120, 200);
-        when(im.getIslandAt(death)).thenReturn(Optional.of(island));
+        when(im.getProtectedIslandAt(death)).thenReturn(Optional.of(island));
 
         Optional<Placement> result = placer.findSpot(uuid, death);
 
@@ -136,7 +143,7 @@ class ChestPlacerTest extends CommonTestSetup {
         // The island there does not have the dead player as a member
         var otherIsland = mock(world.bentobox.bentobox.database.objects.Island.class);
         when(otherIsland.getMemberSet()).thenReturn(ImmutableSet.of(java.util.UUID.randomUUID()));
-        when(im.getIslandAt(death)).thenReturn(Optional.of(otherIsland));
+        when(im.getProtectedIslandAt(death)).thenReturn(Optional.of(otherIsland));
 
         Optional<Placement> result = placer.findSpot(uuid, death);
 
@@ -149,7 +156,7 @@ class ChestPlacerTest extends CommonTestSetup {
     void testPlaceAtDeathLocationDisabledAlwaysUsesTheIsland() {
         settings.setPlaceAtDeathLocation(false);
         Location death = new Location(gameWorld, 2, ISLAND_SURFACE_Y + 1, 2);
-        when(im.getIslandAt(death)).thenReturn(Optional.of(island));
+        when(im.getProtectedIslandAt(death)).thenReturn(Optional.of(island));
 
         Optional<Placement> result = placer.findSpot(uuid, death);
 
@@ -161,7 +168,7 @@ class ChestPlacerTest extends CommonTestSetup {
     @Test
     void testNoIslandMeansNoSpot() {
         Location death = new Location(gameWorld, 200, -120, 200);
-        when(im.getIslandAt(death)).thenReturn(Optional.empty());
+        when(im.getProtectedIslandAt(death)).thenReturn(Optional.empty());
         when(im.getIsland(any(World.class), any(java.util.UUID.class))).thenReturn(null);
 
         assertTrue(placer.findSpot(uuid, death).isEmpty());
@@ -173,7 +180,7 @@ class ChestPlacerTest extends CommonTestSetup {
         // Fill the block the home sits on top of, so the obvious spot is taken
         solid.put(key(0, ISLAND_SURFACE_Y + 1, 0), true);
         Location death = new Location(gameWorld, 2, ISLAND_SURFACE_Y + 1, 2);
-        when(im.getIslandAt(death)).thenReturn(Optional.empty());
+        when(im.getProtectedIslandAt(death)).thenReturn(Optional.empty());
 
         Optional<Placement> result = placer.findSpot(uuid, death);
 
@@ -181,6 +188,84 @@ class ChestPlacerTest extends CommonTestSetup {
         Location spot = result.get().location();
         assertFalse(solid.getOrDefault(key(spot.getBlockX(), spot.getBlockY(), spot.getBlockZ()), false),
                 "The chest must not replace an existing block");
+    }
+
+    /**
+     * Regression: an AcidIsland player drowned at the sea surface just off their island and the
+     * chest was placed 112 blocks down on the sea bed, inside their protection range but
+     * unreachable. The downward search must stop at the configured depth.
+     */
+    @Test
+    void testDrowningAtSeaDoesNotPutTheChestOnTheSeaBed() {
+        int seaLevel = 64;
+        int seaBed = -49;
+        // Ocean: water from the sea bed up to the surface, all within the island's protection
+        for (int y = seaBed + 1; y <= seaLevel; y++) {
+            liquid.add(key(-5, y, -5));
+            liquid.add(key(-1, y, -1));
+        }
+        solid.put(key(-5, seaBed, -5), true);
+        solid.put(key(-1, seaBed, -1), true);
+        Location death = new Location(gameWorld, -5, seaLevel, -5);
+        when(im.getProtectedIslandAt(death)).thenReturn(Optional.of(island));
+
+        Optional<Placement> result = placer.findSpot(uuid, death);
+
+        assertTrue(result.isPresent());
+        assertFalse(result.get().atDeathSite(), "The sea bed is not a place to leave a chest");
+        assertEquals(ISLAND_SURFACE_Y + 1, result.get().location().getBlockY());
+    }
+
+    /**
+     * Even inside the search depth, a spot with water directly above it is on the sea bed of a
+     * shallow sea rather than somewhere a player can walk to.
+     */
+    @Test
+    void testSubmergedGroundIsRejected() {
+        int seaLevel = 64;
+        int seaBed = seaLevel - 4;
+        for (int y = seaBed + 1; y <= seaLevel + 1; y++) {
+            liquid.add(key(-5, y, -5));
+        }
+        solid.put(key(-5, seaBed, -5), true);
+        Location death = new Location(gameWorld, -5, seaLevel, -5);
+        when(im.getProtectedIslandAt(death)).thenReturn(Optional.of(island));
+
+        Optional<Placement> result = placer.findSpot(uuid, death);
+
+        assertTrue(result.isPresent());
+        assertFalse(result.get().atDeathSite(), "A submerged spot must not be used");
+    }
+
+    /**
+     * Ground a long way below is fine as long as it is within the configured depth - a player
+     * shot off a tall island still gets their chest where the items would have landed.
+     */
+    @Test
+    void testGroundWithinTheSearchDepthIsStillUsed() {
+        settings.setSearchDepth(20);
+        int deathY = ISLAND_SURFACE_Y + 15;
+        Location death = new Location(gameWorld, 2, deathY, 2);
+        when(im.getProtectedIslandAt(death)).thenReturn(Optional.of(island));
+
+        Optional<Placement> result = placer.findSpot(uuid, death);
+
+        assertTrue(result.isPresent());
+        assertTrue(result.get().atDeathSite());
+        assertEquals(ISLAND_SURFACE_Y + 1, result.get().location().getBlockY());
+    }
+
+    @Test
+    void testGroundBeyondTheSearchDepthIsNotUsed() {
+        settings.setSearchDepth(4);
+        int deathY = ISLAND_SURFACE_Y + 15;
+        Location death = new Location(gameWorld, 2, deathY, 2);
+        when(im.getProtectedIslandAt(death)).thenReturn(Optional.of(island));
+
+        Optional<Placement> result = placer.findSpot(uuid, death);
+
+        assertTrue(result.isPresent());
+        assertFalse(result.get().atDeathSite());
     }
 
     @Test

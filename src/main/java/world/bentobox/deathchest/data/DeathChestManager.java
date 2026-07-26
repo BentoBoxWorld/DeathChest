@@ -78,18 +78,18 @@ public class DeathChestManager {
     public void load() {
         cache.clear();
         byLocation.clear();
-        for (DeathChestRecord record : handler.loadObjects()) {
-            cache.put(record.getUniqueId(), record);
-            indexLocation(record);
+        for (DeathChestRecord chest : handler.loadObjects()) {
+            cache.put(chest.getUniqueId(), chest);
+            indexLocation(chest);
         }
         addon.log("Loaded " + cache.size() + " death chest" + (cache.size() == 1 ? "" : "s"));
     }
 
-    private void indexLocation(@NonNull DeathChestRecord record) {
-        if (!record.isVirtual()) {
-            Location loc = record.getChestLoc();
+    private void indexLocation(@NonNull DeathChestRecord chest) {
+        if (!chest.isVirtual()) {
+            Location loc = chest.getChestLoc();
             if (loc != null) {
-                byLocation.put(key(loc), record.getUniqueId());
+                byLocation.put(key(loc), chest.getUniqueId());
             }
         }
     }
@@ -134,31 +134,31 @@ public class DeathChestManager {
     @NonNull
     public DeathChestRecord createChest(@NonNull Player player, @NonNull List<ItemStack> drops, int xp) {
         Settings settings = addon.getSettings();
-        DeathChestRecord record = new DeathChestRecord();
-        record.setOwnerUUID(player.getUniqueId());
-        record.setOwnerName(player.getName());
-        record.setDeathLoc(player.getLocation());
-        record.setDeathTime(System.currentTimeMillis());
-        record.setExperience(xp);
+        DeathChestRecord chest = new DeathChestRecord();
+        chest.setOwnerUUID(player.getUniqueId());
+        chest.setOwnerName(player.getName());
+        chest.setDeathLoc(player.getLocation());
+        chest.setDeathTime(System.currentTimeMillis());
+        chest.setExperience(xp);
         if (settings.getExpiryMinutes() > 0) {
-            record.setExpiryTime(record.getDeathTime() + settings.getExpiryMinutes() * 60_000L);
+            chest.setExpiryTime(chest.getDeathTime() + settings.getExpiryMinutes() * 60_000L);
         }
 
         List<ItemStack> remaining = new ArrayList<>(drops);
         placer.findSpot(player.getUniqueId(), player.getLocation()).ifPresent(placement -> {
-            record.setIslandId(placement.island().getUniqueId());
+            chest.setIslandId(placement.island().getUniqueId());
             if (placeBlock(placement.location(), remaining)) {
-                record.setChestLoc(placement.location());
+                chest.setChestLoc(placement.location());
             }
         });
         // Whatever is left over is held by the addon until the player makes room for it.
-        record.setItems(ItemSerializer.toBase64(remaining));
+        chest.setItems(ItemSerializer.toBase64(remaining));
 
-        cache.put(record.getUniqueId(), record);
-        indexLocation(record);
-        handler.saveObjectAsync(record);
+        cache.put(chest.getUniqueId(), chest);
+        indexLocation(chest);
+        handler.saveObjectAsync(chest);
         enforceMaxChests(player.getUniqueId());
-        return record;
+        return chest;
     }
 
     /**
@@ -183,10 +183,12 @@ public class DeathChestManager {
             block.setType(Material.AIR, false);
             return false;
         }
-        Inventory inventory = container.getInventory();
+        // getInventory() on a placed block state is the live tile entity inventory, so adding to
+        // it takes effect immediately. Do NOT call container.update() afterwards: update() writes
+        // the snapshot captured by getState() back over the block, and that snapshot was taken
+        // when the chest was empty, so it wipes everything just added.
         List<ItemStack> leftovers = new ArrayList<>(
-                inventory.addItem(items.toArray(new ItemStack[0])).values());
-        container.update(true, false);
+                container.getInventory().addItem(items.toArray(new ItemStack[0])).values());
         items.clear();
         items.addAll(leftovers);
         return true;
@@ -210,59 +212,58 @@ public class DeathChestManager {
      * Top a chest up from the addon's overflow store, then tidy the chest away if it and the
      * store are both empty. Called after a player closes a death chest.
      *
-     * @param record record to refill
+     * @param chest record to refill
      */
-    public void refill(@NonNull DeathChestRecord record) {
-        Block block = getBlock(record);
+    public void refill(@NonNull DeathChestRecord chest) {
+        Block block = getBlock(chest);
         if (block == null || !(block.getState() instanceof Container container)) {
             // The block is gone. Everything the addon still holds becomes a virtual chest.
-            record.setChestLoc(null);
-            byLocation.values().remove(record.getUniqueId());
-            if (isEmpty(record)) {
-                delete(record);
+            chest.setChestLoc(null);
+            byLocation.values().remove(chest.getUniqueId());
+            if (isEmpty(chest)) {
+                delete(chest);
                 return;
             }
-            handler.saveObjectAsync(record);
+            handler.saveObjectAsync(chest);
             return;
         }
-        List<ItemStack> stored = readItems(record);
+        List<ItemStack> stored = readItems(chest);
         if (!stored.isEmpty()) {
-            Inventory inventory = container.getInventory();
-            stored = new ArrayList<>(inventory.addItem(stored.toArray(new ItemStack[0])).values());
-            container.update(true, false);
-            record.setItems(ItemSerializer.toBase64(stored));
+            // Live inventory - see the note in placeBlock about not calling update() here.
+            stored = new ArrayList<>(container.getInventory().addItem(stored.toArray(new ItemStack[0])).values());
+            chest.setItems(ItemSerializer.toBase64(stored));
         }
-        if (stored.isEmpty() && isInventoryEmpty(container.getInventory()) && record.getExperience() == 0) {
-            delete(record);
+        if (stored.isEmpty() && isInventoryEmpty(container.getInventory()) && chest.getExperience() == 0) {
+            delete(chest);
             block.setType(Material.AIR, false);
             return;
         }
-        handler.saveObjectAsync(record);
+        handler.saveObjectAsync(chest);
     }
 
     /**
      * Read the items the addon is holding for this record.
      *
-     * @param record record to read
+     * @param chest record to read
      * @return mutable list of items, empty if there are none or the data is unreadable
      */
     @NonNull
-    public List<ItemStack> readItems(@NonNull DeathChestRecord record) {
+    public List<ItemStack> readItems(@NonNull DeathChestRecord chest) {
         try {
-            return ItemSerializer.fromBase64(record.getItems());
+            return ItemSerializer.fromBase64(chest.getItems());
         } catch (Exception e) {
-            addon.logError("Could not read stored items for death chest " + record.getUniqueId() + ": "
+            addon.logError("Could not read stored items for death chest " + chest.getUniqueId() + ": "
                     + e.getMessage());
             return new ArrayList<>();
         }
     }
 
     /**
-     * @param record record to check
+     * @param chest record to check
      * @return true if the addon is holding nothing for this record
      */
-    private boolean isEmpty(@NonNull DeathChestRecord record) {
-        return record.getExperience() == 0 && readItems(record).isEmpty();
+    private boolean isEmpty(@NonNull DeathChestRecord chest) {
+        return chest.getExperience() == 0 && readItems(chest).isEmpty();
     }
 
     private boolean isInventoryEmpty(@NonNull Inventory inventory) {
@@ -275,12 +276,12 @@ public class DeathChestManager {
     }
 
     /**
-     * @param record record to locate
+     * @param chest record to locate
      * @return the chest block, or null if the record is virtual or its world is not loaded
      */
     @Nullable
-    public Block getBlock(@NonNull DeathChestRecord record) {
-        Location loc = record.getChestLoc();
+    public Block getBlock(@NonNull DeathChestRecord chest) {
+        Location loc = chest.getChestLoc();
         return loc == null || loc.getWorld() == null ? null : loc.getBlock();
     }
 
@@ -290,22 +291,22 @@ public class DeathChestManager {
      * caller decides whether it is finished with.
      *
      * @param player player to give to
-     * @param record record to claim
+     * @param chest record to claim
      * @return number of item stacks handed over
      */
-    public int claim(@NonNull Player player, @NonNull DeathChestRecord record) {
-        List<ItemStack> items = readItems(record);
+    public int claim(@NonNull Player player, @NonNull DeathChestRecord chest) {
+        List<ItemStack> items = readItems(chest);
         int given = items.size();
         if (!items.isEmpty()) {
             player.getInventory().addItem(items.toArray(new ItemStack[0])).values()
                     .forEach(left -> player.getWorld().dropItem(player.getLocation(), left));
-            record.setItems("");
+            chest.setItems("");
         }
-        if (record.getExperience() > 0) {
-            player.giveExp(record.getExperience());
-            record.setExperience(0);
+        if (chest.getExperience() > 0) {
+            player.giveExp(chest.getExperience());
+            chest.setExperience(0);
         }
-        handler.saveObjectAsync(record);
+        handler.saveObjectAsync(chest);
         return given;
     }
 
@@ -313,44 +314,44 @@ public class DeathChestManager {
      * Give a player the experience held by a chest they have just opened.
      *
      * @param player player opening the chest
-     * @param record record they opened
+     * @param chest record they opened
      */
-    public void giveExperience(@NonNull Player player, @NonNull DeathChestRecord record) {
-        if (record.getExperience() > 0) {
-            player.giveExp(record.getExperience());
-            record.setExperience(0);
-            handler.saveObjectAsync(record);
+    public void giveExperience(@NonNull Player player, @NonNull DeathChestRecord chest) {
+        if (chest.getExperience() > 0) {
+            player.giveExp(chest.getExperience());
+            chest.setExperience(0);
+            handler.saveObjectAsync(chest);
         }
     }
 
     /**
      * Remove a record from the cache and the database. Does not touch the world.
      *
-     * @param record record to delete
+     * @param chest record to delete
      */
-    public void delete(@NonNull DeathChestRecord record) {
-        cache.remove(record.getUniqueId());
-        byLocation.values().remove(record.getUniqueId());
-        handler.deleteObject(record);
+    public void delete(@NonNull DeathChestRecord chest) {
+        cache.remove(chest.getUniqueId());
+        byLocation.values().remove(chest.getUniqueId());
+        handler.deleteObject(chest);
     }
 
     /**
      * Save a record.
      *
-     * @param record record to save
+     * @param chest record to save
      */
-    public void save(@NonNull DeathChestRecord record) {
-        handler.saveObjectAsync(record);
+    public void save(@NonNull DeathChestRecord chest) {
+        handler.saveObjectAsync(chest);
     }
 
     /**
      * Expire a chest, following the configured expiry action.
      *
-     * @param record record to expire
+     * @param chest record to expire
      */
-    public void expire(@NonNull DeathChestRecord record) {
+    public void expire(@NonNull DeathChestRecord chest) {
         boolean drop = addon.getSettings().getExpiryAction() == Settings.ExpiryAction.DROP;
-        Block block = getBlock(record);
+        Block block = getBlock(chest);
         if (block != null && block.getState() instanceof Container container) {
             if (drop) {
                 Location dropAt = block.getLocation().add(0.5, 0.5, 0.5);
@@ -359,18 +360,18 @@ public class DeathChestManager {
                         block.getWorld().dropItem(dropAt, item);
                     }
                 }
-                readItems(record).forEach(item -> block.getWorld().dropItem(dropAt, item));
-                spawnExperience(dropAt, record.getExperience());
+                readItems(chest).forEach(item -> block.getWorld().dropItem(dropAt, item));
+                spawnExperience(dropAt, chest.getExperience());
             }
+            // Live inventory - see the note in placeBlock about not calling update() here.
             container.getInventory().clear();
-            container.update(true, false);
             block.setType(Material.AIR, false);
-        } else if (drop && record.getDeathLoc() != null && record.getDeathLoc().getWorld() != null) {
+        } else if (drop && chest.getDeathLoc() != null && chest.getDeathLoc().getWorld() != null) {
             // Virtual chest with nowhere sensible to drop. Nothing to do but let it go.
-            addon.log("Death chest " + record.getUniqueId() + " for " + record.getOwnerName()
+            addon.log("Death chest " + chest.getUniqueId() + " for " + chest.getOwnerName()
                     + " expired with no block to drop from.");
         }
-        delete(record);
+        delete(chest);
     }
 
     private void spawnExperience(@NonNull Location location, int amount) {

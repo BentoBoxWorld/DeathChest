@@ -60,9 +60,12 @@ class DeathChestCommandTest extends CommonTestSetup {
         settings = new Settings();
         when(addon.getSettings()).thenReturn(settings);
         when(addon.getManager()).thenReturn(manager);
+        when(addon.getPlugin()).thenReturn(plugin);
+        when(iwm.getFriendlyName(any(org.bukkit.World.class))).thenReturn("AcidIsland");
 
         gameWorld = mock(World.class);
         when(gameWorld.getName()).thenReturn("bskyblock_world");
+        when(gameWorld.getEnvironment()).thenReturn(World.Environment.NORMAL);
         mockedBukkit.when(() -> org.bukkit.Bukkit.getWorld(anyString())).thenReturn(gameWorld);
 
         when(user.isOp()).thenReturn(false);

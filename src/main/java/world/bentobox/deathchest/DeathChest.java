@@ -75,6 +75,12 @@ public class DeathChest extends Addon {
     @Override
     public void onReload() {
         loadSettings();
+        if (settings == null) {
+            // The config is broken and loadSettings has already disabled the addon. Leave the
+            // task stopped rather than running on with settings that are no longer there.
+            stopExpiryTask();
+            return;
+        }
         if (manager != null) {
             startExpiryTask();
         }

@@ -24,7 +24,7 @@ import world.bentobox.deathchest.CommonTestSetup;
  */
 class DeathChestRecordTest extends CommonTestSetup {
 
-    private DeathChestRecord record;
+    private DeathChestRecord chest;
     private World gameWorld;
 
     @BeforeEach
@@ -34,28 +34,28 @@ class DeathChestRecordTest extends CommonTestSetup {
         gameWorld = mock(World.class);
         when(gameWorld.getName()).thenReturn("bskyblock_world");
         mockedBukkit.when(() -> Bukkit.getWorld(anyString())).thenReturn(gameWorld);
-        record = new DeathChestRecord();
+        chest = new DeathChestRecord();
     }
 
     @Test
     void testNewRecordHasAUniqueId() {
-        assertNotNull(record.getUniqueId());
-        assertFalse(record.getUniqueId().isEmpty());
-        assertFalse(record.getUniqueId().equals(new DeathChestRecord().getUniqueId()));
+        assertNotNull(chest.getUniqueId());
+        assertFalse(chest.getUniqueId().isEmpty());
+        assertFalse(chest.getUniqueId().equals(new DeathChestRecord().getUniqueId()));
     }
 
     @Test
     void testNewRecordIsVirtual() {
-        assertTrue(record.isVirtual());
-        assertNull(record.getChestLoc());
+        assertTrue(chest.isVirtual());
+        assertNull(chest.getChestLoc());
     }
 
     @Test
     void testChestLocationRoundTrip() {
-        record.setChestLoc(new Location(gameWorld, 12, 70, -34));
+        chest.setChestLoc(new Location(gameWorld, 12, 70, -34));
 
-        assertFalse(record.isVirtual());
-        Location back = record.getChestLoc();
+        assertFalse(chest.isVirtual());
+        Location back = chest.getChestLoc();
         assertNotNull(back);
         assertEquals(12, back.getBlockX());
         assertEquals(70, back.getBlockY());
@@ -64,15 +64,15 @@ class DeathChestRecordTest extends CommonTestSetup {
 
     @Test
     void testNullChestLocationMakesItVirtualAgain() {
-        record.setChestLoc(new Location(gameWorld, 1, 2, 3));
-        record.setChestLoc(null);
-        assertTrue(record.isVirtual());
+        chest.setChestLoc(new Location(gameWorld, 1, 2, 3));
+        chest.setChestLoc(null);
+        assertTrue(chest.isVirtual());
     }
 
     @Test
     void testDeathLocationRoundTrip() {
-        record.setDeathLoc(new Location(gameWorld, -5, -120, 7));
-        Location back = record.getDeathLoc();
+        chest.setDeathLoc(new Location(gameWorld, -5, -120, 7));
+        Location back = chest.getDeathLoc();
         assertNotNull(back);
         assertEquals(-5, back.getBlockX());
         assertEquals(-120, back.getBlockY());
@@ -82,34 +82,34 @@ class DeathChestRecordTest extends CommonTestSetup {
     @Test
     void testOwnerUuidRoundTrip() {
         UUID owner = UUID.randomUUID();
-        record.setOwnerUUID(owner);
-        assertEquals(owner, record.getOwnerUUID());
-        assertEquals(owner.toString(), record.getOwner());
+        chest.setOwnerUUID(owner);
+        assertEquals(owner, chest.getOwnerUUID());
+        assertEquals(owner.toString(), chest.getOwner());
     }
 
     @Test
     void testUnparseableOwnerIsNullNotAnException() {
-        record.setOwner("this-is-not-a-uuid");
-        assertNull(record.getOwnerUUID());
+        chest.setOwner("this-is-not-a-uuid");
+        assertNull(chest.getOwnerUUID());
     }
 
     @Test
     void testNullOwnerIsNull() {
-        record.setOwnerUUID(null);
-        assertNull(record.getOwnerUUID());
+        chest.setOwnerUUID(null);
+        assertNull(chest.getOwnerUUID());
     }
 
     @Test
     void testZeroExpiryNeverExpires() {
-        record.setExpiryTime(0);
-        assertFalse(record.isExpired(Long.MAX_VALUE));
+        chest.setExpiryTime(0);
+        assertFalse(chest.isExpired(Long.MAX_VALUE));
     }
 
     @Test
     void testExpiry() {
-        record.setExpiryTime(1000L);
-        assertFalse(record.isExpired(999L));
-        assertTrue(record.isExpired(1000L));
-        assertTrue(record.isExpired(1001L));
+        chest.setExpiryTime(1000L);
+        assertFalse(chest.isExpired(999L));
+        assertTrue(chest.isExpired(1000L));
+        assertTrue(chest.isExpired(1001L));
     }
 }

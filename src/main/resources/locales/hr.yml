@@ -1,0 +1,35 @@
+deathchest:
+  death:
+    chest-placed: "<green>Tvoji predmeti su u škrinji smrti na <aqua>[world] [number], [y], [z]</aqua>.</green>"
+    stored-virtual: "<gold>Nije bilo mjesta za škrinju, pa se tvoji predmeti čuvaju. Koristi <aqua>/[label] deathchest</aqua> da ih dobiješ.</gold>"
+    overflow: "<gold>Neki predmeti se nisu uklopili. Pojavit će se u škrinji kad ga praziš.</gold>"
+    expires: "<gray>Škrinja će nestati za [number] minuta.</gray>"
+  world:
+    nether: "Nether"
+    the-end: "The End"
+  errors:
+    not-your-chest: "<red>Ova škrinja smrti pripada igraču [name].</red>"
+  commands:
+    player:
+      description: "popis tvojih škrinja smrti i povratak predmeta"
+      parameters: "[claim|tp] [number]"
+      header: "<green>Imaš [number] škrinje(u) smrti:</green>"
+      entry: "<aqua>[number].</aqua> <white>[description]</white> <gray>([time])</gray>"
+      footer: "<gray>Koristi <aqua>/[label] deathchest claim 1</aqua> za povratak čuvanih predmeta, ili <aqua>/[label] deathchest tp 1</aqua> da posjetiš jedan.</gray>"
+      none: "<gray>Nemaš nikakve škrinje smrti.</gray>"
+      held-by-addon: "čuvan za tebe"
+      never-expires: "nikada ne istječe"
+      minutes-left: "[number] min preostalo"
+      unknown-number: "<red>Nema škrinje broj [number].</red>"
+      claimed: "<green>Dobio si [number] hrpu(e) predmeta.</green>"
+      nothing-to-claim: "<gray>Nema ničega za povratak za ovu škrinju - idi i otvori je.</gray>"
+      no-block-to-visit: "<red>Ova škrinja smrti nema bloka na svijetu. Umjesto toga je preuzmi.</red>"
+      teleported: "<green>Teleportiran k svojoj škrinji smrti.</green>"
+    admin:
+      description: "popis i brisanje škrinja smrti"
+      parameters: "[player|purge]"
+      summary: "<green>Pohranjeno je [number] škrinje(u) smrti.</green>"
+      none: "<gray>Igrač [name] nema nikakve škrinje smrti.</gray>"
+      header: "<green>Igrač [name] ima [number] škrinje(u) smrti:</green>"
+      entry: "<aqua>[number].</aqua> <white>škrinja: [description]</white> <gray>umro je u: [death]</gray>"
+      purged: "<green>Obrisano [number] škrinje(u) smrti.</green>"

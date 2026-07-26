@@ -1,0 +1,35 @@
+deathchest:
+  death:
+    chest-placed: "<green>Eşyalarınız <aqua>[world] [number], [y], [z]</aqua> konumunda bir ölüm sandığında.</green>"
+    stored-virtual: "<gold>Ölüm sandığı koyacak yer olmadığı için eşyalarınız sizin için bekletiliyor. Geri almak için <aqua>/[label] deathchest</aqua> kullanın.</gold>"
+    overflow: "<gold>Bazı eşyalar sığmadı. Sandığı boşalttıkça içinde görünecekler.</gold>"
+    expires: "<gray>Sandık [number] dakika içinde kaybolacak.</gray>"
+  world:
+    nether: "Nether"
+    the-end: "The End"
+  errors:
+    not-your-chest: "<red>Bu ölüm sandığı [name]'e ait.</red>"
+  commands:
+    player:
+      description: "ölüm sandıklarınızı listeleyin ve eşyalarınızı geri alın"
+      parameters: "[claim|tp] [number]"
+      header: "<green>[number] ölüm sandığınız var:</green>"
+      entry: "<aqua>[number].</aqua> <white>[description]</white> <gray>([time])</gray>"
+      footer: "<gray>Bekletilen eşyaları almak için <aqua>/[label] deathchest claim 1</aqua> kullanın ya da birini ziyaret etmek için <aqua>/[label] deathchest tp 1</aqua> kullanın.</gray>"
+      none: "<gray>Hiç ölüm sandığınız yok.</gray>"
+      held-by-addon: "sizin için bekletiliyor"
+      never-expires: "asla süresi dolmaz"
+      minutes-left: "[number] dk kaldı"
+      unknown-number: "<red>Ölüm sandığı numarası [number] yok.</red>"
+      claimed: "<green>[number] eşya yığını aldınız.</green>"
+      nothing-to-claim: "<gray>Bu sandık için bekletilen hiçbir şey yok - açıp alın.</gray>"
+      no-block-to-visit: "<red>Bu ölüm sandığının dünyada bir bloğu yok. Bunun yerine talep edin.</red>"
+      teleported: "<green>Ölüm sandığınıza ışınlandınız.</green>"
+    admin:
+      description: "ölüm sandıklarını listeleyin ve temizleyin"
+      parameters: "[player|purge]"
+      summary: "<green>[number] ölüm sandığı saklanıyor.</green>"
+      none: "<gray>[name]'in ölüm sandığı yok.</gray>"
+      header: "<green>[name]'in [number] ölüm sandığı var:</green>"
+      entry: "<aqua>[number].</aqua> <white>sandık: [description]</white> <gray>öldü: [death]</gray>"
+      purged: "<green>[number] süresi dolmuş ölüm sandığı silindi.</green>"

@@ -1,0 +1,35 @@
+deathchest:
+  death:
+    chest-placed: "<green>あなたのアイテムは <aqua>[world] [number], [y], [z]</aqua> のデスチェストに保存されました。</green>"
+    stored-virtual: "<gold>デスチェストを置く場所がなかったため、あなたのアイテムは一時保管されています。 <aqua>/[label] deathchest</aqua> を使用して取得してください。</gold>"
+    overflow: "<gold>収まらないアイテムがあります。チェストを空にすると現れます。</gold>"
+    expires: "<gray>チェストは [number] 分後に消えます。</gray>"
+  world:
+    nether: "ネザー"
+    the-end: "ジ・エンド"
+  errors:
+    not-your-chest: "<red>このデスチェストは [name] のものです。</red>"
+  commands:
+    player:
+      description: "デスチェストを一覧表示し、アイテムを回収します"
+      parameters: "[claim|tp] [number]"
+      header: "<green>あなたはデスチェスト [number] 個を持っています:</green>"
+      entry: "<aqua>[number].</aqua> <white>[description]</white> <gray>([time])</gray>"
+      footer: "<gray><aqua>/[label] deathchest claim 1</aqua> で一時保管されたアイテムを回収するか、<aqua>/[label] deathchest tp 1</aqua> でチェストを訪れてください。</gray>"
+      none: "<gray>デスチェストはありません。</gray>"
+      held-by-addon: "一時保管中"
+      never-expires: "無期限"
+      minutes-left: "[number] 分残り"
+      unknown-number: "<red>デスチェスト [number] は存在しません。</red>"
+      claimed: "<green>アイテムスタック [number] 個を受け取りました。</green>"
+      nothing-to-claim: "<gray>このチェストに一時保管されているアイテムはありません。チェストを開いてください。</gray>"
+      no-block-to-visit: "<red>このデスチェストはワールドに存在しません。回収してください。</red>"
+      teleported: "<green>デスチェストにテレポートしました。</green>"
+    admin:
+      description: "デスチェストを一覧表示および purge します"
+      parameters: "[player|purge]"
+      summary: "<green>デスチェスト [number] 個が保存されています。</green>"
+      none: "<gray>[name] はデスチェストを持っていません。</gray>"
+      header: "<green>[name] はデスチェスト [number] 個を持っています:</green>"
+      entry: "<aqua>[number].</aqua> <white>チェスト: [description]</white> <gray>死亡地点: [death]</gray>"
+      purged: "<green>期限切れのデスチェスト [number] 個を削除しました。</green>"

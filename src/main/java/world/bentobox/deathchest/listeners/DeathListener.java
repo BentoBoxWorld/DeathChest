@@ -16,6 +16,7 @@ import world.bentobox.bentobox.api.user.User;
 import world.bentobox.deathchest.DeathChest;
 import world.bentobox.deathchest.Settings;
 import world.bentobox.deathchest.data.DeathChestRecord;
+import world.bentobox.deathchest.util.WorldName;
 
 /**
  * Turns a player's drops into a death chest.
@@ -63,9 +64,9 @@ public class DeathListener implements Listener {
             e.setDroppedExp(0);
         }
 
-        DeathChestRecord record = addon.getManager().createChest(player, drops, xp);
+        DeathChestRecord chest = addon.getManager().createChest(player, drops, xp);
         if (settings.isNotifyOnDeath()) {
-            notifyPlayer(User.getInstance(player), record, addon.getGameModeLabel(player.getWorld()));
+            notifyPlayer(User.getInstance(player), chest, addon.getGameModeLabel(player.getWorld()));
         }
     }
 
@@ -73,25 +74,26 @@ public class DeathListener implements Listener {
      * Tell the player where their things went.
      *
      * @param user   player who died
-     * @param record their new death chest
+     * @param chest  their new death chest
      * @param label  the game mode's command label, for the "run this next" hint
      */
-    private void notifyPlayer(User user, DeathChestRecord record, String label) {
+    private void notifyPlayer(User user, DeathChestRecord chest, String label) {
         if (user == null || !user.isPlayer()) {
             return;
         }
-        Location chest = record.getChestLoc();
-        if (chest == null) {
+        Location chestLocation = chest.getChestLoc();
+        if (chestLocation == null) {
             user.sendMessage("deathchest.death.stored-virtual", TextVariables.LABEL, label);
         } else {
-            user.sendMessage("deathchest.death.chest-placed", "[world]", chest.getWorld().getName(),
-                    TextVariables.NUMBER, String.valueOf(chest.getBlockX()), "[y]",
-                    String.valueOf(chest.getBlockY()), "[z]", String.valueOf(chest.getBlockZ()));
-            if (!addon.getManager().readItems(record).isEmpty()) {
+            user.sendMessage("deathchest.death.chest-placed", "[world]",
+                    WorldName.of(addon, user, chestLocation.getWorld()), TextVariables.NUMBER,
+                    String.valueOf(chestLocation.getBlockX()), "[y]", String.valueOf(chestLocation.getBlockY()), "[z]",
+                    String.valueOf(chestLocation.getBlockZ()));
+            if (!addon.getManager().readItems(chest).isEmpty()) {
                 user.sendMessage("deathchest.death.overflow");
             }
         }
-        if (record.getExpiryTime() > 0) {
+        if (chest.getExpiryTime() > 0) {
             user.sendMessage("deathchest.death.expires", TextVariables.NUMBER,
                     String.valueOf(addon.getSettings().getExpiryMinutes()));
         }

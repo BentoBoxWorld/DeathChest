@@ -45,7 +45,7 @@ class AdminDeathChestCommandTest extends CommonTestSetup {
     private PlayersManager pm;
 
     private AdminDeathChestCommand command;
-    private DeathChestRecord record;
+    private DeathChestRecord chest;
     private final UUID target = UUID.randomUUID();
 
     @Override
@@ -56,9 +56,12 @@ class AdminDeathChestCommandTest extends CommonTestSetup {
         when(plugin.getCommandsManager()).thenReturn(cm);
         when(plugin.getPlayers()).thenReturn(pm);
         when(addon.getManager()).thenReturn(manager);
+        when(addon.getPlugin()).thenReturn(plugin);
+        when(iwm.getFriendlyName(any(org.bukkit.World.class))).thenReturn("AcidIsland");
 
         World gameWorld = mock(World.class);
         when(gameWorld.getName()).thenReturn("bskyblock_world");
+        when(gameWorld.getEnvironment()).thenReturn(World.Environment.NORMAL);
         mockedBukkit.when(() -> org.bukkit.Bukkit.getWorld(anyString())).thenReturn(gameWorld);
 
         when(user.isOp()).thenReturn(true);
@@ -71,18 +74,18 @@ class AdminDeathChestCommandTest extends CommonTestSetup {
         when(parent.getSubCommandAliases()).thenReturn(new HashMap<>());
         when(parent.getWorld()).thenReturn(world);
 
-        record = new DeathChestRecord();
-        record.setOwnerUUID(target);
-        record.setOwnerName("someone");
-        record.setChestLoc(new Location(gameWorld, 3, 64, 9));
-        record.setDeathLoc(new Location(gameWorld, 3, -120, 9));
+        chest = new DeathChestRecord();
+        chest.setOwnerUUID(target);
+        chest.setOwnerName("someone");
+        chest.setChestLoc(new Location(gameWorld, 3, 64, 9));
+        chest.setDeathLoc(new Location(gameWorld, 3, -120, 9));
 
         command = new AdminDeathChestCommand(addon, parent);
     }
 
     @Test
     void testNoArgsShowsASummary() {
-        when(manager.getAllChests()).thenReturn(List.of(record));
+        when(manager.getAllChests()).thenReturn(List.of(chest));
 
         assertTrue(command.execute(user, "deathchest", List.of()));
 
@@ -102,13 +105,13 @@ class AdminDeathChestCommandTest extends CommonTestSetup {
     @Test
     void testListsAPlayersChests() {
         when(pm.getUUID("someone")).thenReturn(target);
-        when(manager.getChests(target)).thenReturn(List.of(record));
+        when(manager.getChests(target)).thenReturn(List.of(chest));
 
         assertTrue(command.execute(user, "deathchest", List.of("someone")));
 
         verify(user).sendMessage("deathchest.commands.admin.header", "[name]", "someone", "[number]", "1");
         verify(user).sendMessage("deathchest.commands.admin.entry", "[number]", "1", "[description]",
-                "bskyblock_world 3,64,9", "[death]", "bskyblock_world 3,-120,9");
+                "AcidIsland 3, 64, 9", "[death]", "AcidIsland 3, -120, 9");
     }
 
     @Test

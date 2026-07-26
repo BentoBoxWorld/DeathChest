@@ -1,0 +1,35 @@
+deathchest:
+  death:
+    chest-placed: "<green>Các vật phẩm của bạn trong một rương chết tại <aqua>[world] [number], [y], [z]</aqua>.</green>"
+    stored-virtual: "<gold>Không có nơi đặt rương chết, vì vậy các vật phẩm của bạn đang được lưu giữ. Sử dụng <aqua>/[label] deathchest</aqua> để lấy chúng lại.</gold>"
+    overflow: "<gold>Một số vật phẩm không vừa. Chúng sẽ xuất hiện trong rương khi bạn làm trống nó.</gold>"
+    expires: "<gray>Rương sẽ biến mất trong [number] phút.</gray>"
+  world:
+    nether: "Nether"
+    the-end: "The End"
+  errors:
+    not-your-chest: "<red>Rương chết này thuộc về [name].</red>"
+  commands:
+    player:
+      description: "liệt kê các rương chết của bạn và lấy lại các vật phẩm"
+      parameters: "[claim|tp] [number]"
+      header: "<green>Bạn có [number] rương chết:</green>"
+      entry: "<aqua>[number].</aqua> <white>[description]</white> <gray>([time])</gray>"
+      footer: "<gray>Sử dụng <aqua>/[label] deathchest claim 1</aqua> để lấy các vật phẩm được lưu giữ, hoặc <aqua>/[label] deathchest tp 1</aqua> để ghé thăm một cái.</gray>"
+      none: "<gray>Bạn không có rương chết nào.</gray>"
+      held-by-addon: "được lưu giữ cho bạn"
+      never-expires: "không bao giờ hết hạn"
+      minutes-left: "[number] phút còn lại"
+      unknown-number: "<red>Không có rương chết số [number].</red>"
+      claimed: "<green>Bạn nhận được [number] chồng vật phẩm.</green>"
+      nothing-to-claim: "<gray>Không có gì được lưu giữ cho rương này - hãy mở nó.</gray>"
+      no-block-to-visit: "<red>Rương chết này không có khối trong thế giới. Hãy yêu cầu nó thay vào đó.</red>"
+      teleported: "<green>Đã teletransport đến rương chết của bạn.</green>"
+    admin:
+      description: "liệt kê và dọn sạch các rương chết"
+      parameters: "[player|purge]"
+      summary: "<green>Có [number] rương chết được lưu trữ.</green>"
+      none: "<gray>[name] không có rương chết nào.</gray>"
+      header: "<green>[name] có [number] rương chết:</green>"
+      entry: "<aqua>[number].</aqua> <white>rương: [description]</white> <gray>chết tại: [death]</gray>"
+      purged: "<green>Đã xóa [number] rương chết hết hạn.</green>"

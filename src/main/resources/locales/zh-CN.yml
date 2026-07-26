@@ -1,0 +1,35 @@
+deathchest:
+  death:
+    chest-placed: "<green>您的物品保存在 <aqua>[world] [number], [y], [z]</aqua> 的死亡箱中。</green>"
+    stored-virtual: "<gold>无法放置死亡箱，您的物品已被插件保管。使用 <aqua>/[label] deathchest</aqua> 取回。</gold>"
+    overflow: "<gold>部分物品无法放入。当您打开箱子并取出物品时，这些物品将出现。</gold>"
+    expires: "<gray>箱子将在 [number] 分钟后消失。</gray>"
+  world:
+    nether: "下界"
+    the-end: "末地"
+  errors:
+    not-your-chest: "<red>这个死亡箱属于 [name]。</red>"
+  commands:
+    player:
+      description: "列出您的死亡箱并取回物品"
+      parameters: "[claim|tp] [number]"
+      header: "<green>您有 [number] 个死亡箱：</green>"
+      entry: "<aqua>[number].</aqua> <white>[description]</white> <gray>([time])</gray>"
+      footer: "<gray>使用 <aqua>/[label] deathchest claim 1</aqua> 来收取保管的物品，或使用 <aqua>/[label] deathchest tp 1</aqua> 访问死亡箱。</gray>"
+      none: "<gray>您没有死亡箱。</gray>"
+      held-by-addon: "由插件保管"
+      never-expires: "永不过期"
+      minutes-left: "[number] 分钟后过期"
+      unknown-number: "<red>不存在死亡箱编号 [number]。</red>"
+      claimed: "<green>您获得了 [number] 组物品。</green>"
+      nothing-to-claim: "<gray>此箱子没有被保管的物品 - 请去打开它。</gray>"
+      no-block-to-visit: "<red>这个死亡箱在世界中不存在。请收取它。</red>"
+      teleported: "<green>已传送至您的死亡箱。</green>"
+    admin:
+      description: "列出并 purge 死亡箱"
+      parameters: "[player|purge]"
+      summary: "<green>已保存 [number] 个死亡箱。</green>"
+      none: "<gray>[name] 没有死亡箱。</gray>"
+      header: "<green>[name] 有 [number] 个死亡箱：</green>"
+      entry: "<aqua>[number].</aqua> <white>箱子: [description]</white> <gray>死亡位置: [death]</gray>"
+      purged: "<green>已清除 [number] 个过期的死亡箱。</green>"
