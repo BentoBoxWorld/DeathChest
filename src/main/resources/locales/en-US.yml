@@ -1,4 +1,10 @@
 deathchest:
+  # Floating text shown above a death chest. MiniMessage formatting, may be several lines,
+  # and [player] is replaced with the name of the player who died. Blank it to turn
+  # holograms off.
+  hologram: |-
+    <gold><bold>Death Chest</bold></gold>
+    <yellow>[player]</yellow>
   death:
     chest-placed: "<green>Your items are in a death chest at <aqua>[world] [number], [y], [z]</aqua>.</green>"
     stored-virtual: "<gold>There was nowhere to put a death chest, so your items are being held for you. Use <aqua>/[label] deathchest</aqua> to get them back.</gold>"
@@ -27,9 +33,11 @@ deathchest:
       teleported: "<green>Teleported to your death chest.</green>"
     admin:
       description: "list and purge death chests"
-      parameters: "[player|purge]"
+      parameters: "[player|purge|debug]"
       summary: "<green>There are [number] death chest(s) stored.</green>"
       none: "<gray>[name] has no death chests.</gray>"
       header: "<green>[name] has [number] death chest(s):</green>"
       entry: "<aqua>[number].</aqua> <white>chest: [description]</white> <gray>died at: [death]</gray>"
       purged: "<green>Expired [number] death chest(s).</green>"
+      debug-on: "<green>DeathChest debug is now ON. Every death will be reported in the server console.</green>"
+      debug-off: "<gray>DeathChest debug is now off.</gray>"

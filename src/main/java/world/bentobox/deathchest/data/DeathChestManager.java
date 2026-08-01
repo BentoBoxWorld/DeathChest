@@ -156,6 +156,7 @@ public class DeathChestManager {
 
         cache.put(chest.getUniqueId(), chest);
         indexLocation(chest);
+        addon.getHolograms().spawn(chest);
         handler.saveObjectAsync(chest);
         enforceMaxChests(player.getUniqueId());
         return chest;
@@ -218,6 +219,7 @@ public class DeathChestManager {
         Block block = getBlock(chest);
         if (block == null || !(block.getState() instanceof Container container)) {
             // The block is gone. Everything the addon still holds becomes a virtual chest.
+            addon.getHolograms().remove(chest);
             chest.setChestLoc(null);
             byLocation.values().remove(chest.getUniqueId());
             if (isEmpty(chest)) {
@@ -325,11 +327,13 @@ public class DeathChestManager {
     }
 
     /**
-     * Remove a record from the cache and the database. Does not touch the world.
+     * Remove a record from the cache and the database, and take down its hologram.
+     * Does not touch any blocks.
      *
      * @param chest record to delete
      */
     public void delete(@NonNull DeathChestRecord chest) {
+        addon.getHolograms().remove(chest);
         cache.remove(chest.getUniqueId());
         byLocation.values().remove(chest.getUniqueId());
         handler.deleteObject(chest);

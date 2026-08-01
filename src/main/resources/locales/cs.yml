@@ -1,4 +1,7 @@
 deathchest:
+  hologram: |-
+    <gold><bold>Truhla smrti</bold></gold>
+    <yellow>[player]</yellow>
   death:
     chest-placed: "<green>Vaše věci jsou v truhle smrti na <aqua>[world] [number], [y], [z]</aqua>.</green>"
     stored-virtual: "<gold>Nebylo se kam márnici umístit, takže vaše věci jsou nyní uschovány. Použijte <aqua>/[label] deathchest</aqua> abyste je dostali zpět.</gold>"
@@ -33,3 +36,5 @@ deathchest:
       header: "<green>Hráč [name] má [number] truhel smrti:</green>"
       entry: "<aqua>[number].</aqua> <white>truhla: [description]</white> <gray>zemřel v: [death]</gray>"
       purged: "<green>Smazáno [number] truhel smrti.</green>"
+      debug-on: "<green>Ladění DeathChest je nyní ZAPNUTO. Každá smrt bude hlášena v konzoli serveru.</green>"
+      debug-off: "<gray>Ladění DeathChest je nyní vypnuto.</gray>"

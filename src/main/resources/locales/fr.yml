@@ -1,4 +1,7 @@
 deathchest:
+  hologram: |-
+    <gold><bold>Coffre de mort</bold></gold>
+    <yellow>[player]</yellow>
   death:
     chest-placed: "<green>Vos objets sont dans un coffre de mort à <aqua>[world] [number], [y], [z]</aqua>.</green>"
     stored-virtual: "<gold>Il n'y avait nulle part pour mettre un coffre de mort, donc vos objets sont stockés pour vous. Utilisez <aqua>/[label] deathchest</aqua> pour les récupérer.</gold>"
@@ -33,3 +36,5 @@ deathchest:
       header: "<green>[name] a [number] coffre(s) de mort:</green>"
       entry: "<aqua>[number].</aqua> <white>coffre: [description]</white> <gray>mort à: [death]</gray>"
       purged: "<green>Expiré [number] coffre(s) de mort.</green>"
+      debug-on: "<green>Le débogage de DeathChest est maintenant ACTIVÉ. Chaque mort sera signalée dans la console du serveur.</green>"
+      debug-off: "<gray>Le débogage de DeathChest est maintenant désactivé.</gray>"

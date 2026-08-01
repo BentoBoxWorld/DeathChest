@@ -66,7 +66,7 @@
         <!-- Do not change unless you want a different name for local builds. -->
         <build.number>-LOCAL</build.number>
         <!-- This allows to change between versions. -->
-        <build.version>1.0.0</build.version>
+        <build.version>1.1.0</build.version>
         <!-- Sonar Cloud -->
         <!-- The registered project key on SonarCloud, which is not the repository name -->
         <sonar.projectKey>BentoBoxWorld_DeathChest2</sonar.projectKey>

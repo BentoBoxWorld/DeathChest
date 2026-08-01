@@ -13,6 +13,7 @@ import world.bentobox.bentobox.api.user.User;
 import world.bentobox.bentobox.util.Util;
 import world.bentobox.deathchest.DeathChest;
 import world.bentobox.deathchest.data.DeathChestRecord;
+import world.bentobox.deathchest.listeners.DeathDebugListener;
 import world.bentobox.deathchest.util.WorldName;
 
 /**
@@ -23,6 +24,8 @@ import world.bentobox.deathchest.util.WorldName;
 public class AdminDeathChestCommand extends CompositeCommand {
 
     private static final String PURGE = "purge";
+
+    private static final String DEBUG = "debug";
 
     private final DeathChest addon;
 
@@ -49,6 +52,17 @@ public class AdminDeathChestCommand extends CompositeCommand {
         if (args.size() != 1) {
             showHelp(this, user);
             return false;
+        }
+        if (DEBUG.equalsIgnoreCase(args.get(0))) {
+            boolean on = !addon.getSettings().isDebug();
+            addon.getSettings().setDebug(on);
+            addon.saveSettings();
+            if (on) {
+                // Report the state now: it is often enough on its own to show what is wrong.
+                DeathDebugListener.dumpState(addon);
+            }
+            user.sendMessage(on ? "deathchest.commands.admin.debug-on" : "deathchest.commands.admin.debug-off");
+            return true;
         }
         if (PURGE.equalsIgnoreCase(args.get(0))) {
             int purged = addon.getManager().checkExpiry();
@@ -83,6 +97,7 @@ public class AdminDeathChestCommand extends CompositeCommand {
         if (args.size() == 2) {
             List<String> options = new java.util.ArrayList<>(Util.getOnlinePlayerList(user));
             options.add(PURGE);
+            options.add(DEBUG);
             return Optional.of(Util.tabLimit(options, args.get(1).toLowerCase(Locale.ENGLISH)));
         }
         return Optional.empty();

@@ -1,4 +1,7 @@
 deathchest:
+  hologram: |-
+    <gold><bold>Сундук смерти</bold></gold>
+    <yellow>[player]</yellow>
   death:
     chest-placed: "<green>Ваши вещи находятся в сундуке смерти в <aqua>[world] [number], [y], [z]</aqua>.</green>"
     stored-virtual: "<gold>Нет места для размещения сундука, поэтому ваши вещи хранятся для вас. Используйте <aqua>/[label] deathchest</aqua> для их получения.</gold>"
@@ -33,3 +36,5 @@ deathchest:
       header: "<green>У [name] есть [number] сундук(и) смерти:</green>"
       entry: "<aqua>[number].</aqua> <white>сундук: [description]</white> <gray>погиб в: [death]</gray>"
       purged: "<green>Удалено [number] сундук(и) смерти.</green>"
+      debug-on: "<green>Отладка DeathChest теперь ВКЛЮЧЕНА. Каждая смерть будет сообщаться в консоли сервера.</green>"
+      debug-off: "<gray>Отладка DeathChest теперь выключена.</gray>"

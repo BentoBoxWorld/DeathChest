@@ -50,6 +50,7 @@ import world.bentobox.bentobox.util.Util;
 import world.bentobox.deathchest.CommonTestSetup;
 import world.bentobox.deathchest.DeathChest;
 import world.bentobox.deathchest.Settings;
+import world.bentobox.deathchest.util.HologramManager;
 
 /**
  * Tests the death chest manager: creation, lookup, claiming and expiry.
@@ -68,6 +69,8 @@ class DeathChestManagerTest extends CommonTestSetup {
     private Inventory chestInventory;
     @Mock
     private Block chestBlock;
+    @Mock
+    private HologramManager holograms;
 
     private MockedStatic<DatabaseSetup> mockDb;
     private Settings settings;
@@ -92,6 +95,7 @@ class DeathChestManagerTest extends CommonTestSetup {
 
         settings = new Settings();
         when(addon.getSettings()).thenReturn(settings);
+        when(addon.getHolograms()).thenReturn(holograms);
         when(addon.getIslands()).thenReturn(im);
         when(addon.getPlugin()).thenReturn(plugin);
         when(addon.getLogger()).thenReturn(java.util.logging.Logger.getLogger("DeathChestManagerTest"));
@@ -172,6 +176,7 @@ class DeathChestManagerTest extends CommonTestSetup {
         assertEquals("island-1", chest.getIslandId());
         verify(chestBlock).setType(Material.CHEST, false);
         assertTrue(manager.getChestAt(chest.getChestLoc()).isPresent());
+        verify(holograms).spawn(chest);
     }
 
     /**
@@ -345,6 +350,7 @@ class DeathChestManagerTest extends CommonTestSetup {
         manager.delete(chest);
         assertTrue(manager.getAllChests().isEmpty());
         assertTrue(manager.getChestAt(loc).isEmpty());
+        verify(holograms).remove(chest);
     }
 
     @Test
@@ -404,5 +410,6 @@ class DeathChestManagerTest extends CommonTestSetup {
 
         assertTrue(chest.isVirtual());
         assertFalse(manager.getAllChests().isEmpty(), "Held items must survive the block going away");
+        verify(holograms).remove(chest);
     }
 }

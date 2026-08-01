@@ -15,8 +15,10 @@ import world.bentobox.deathchest.commands.AdminDeathChestCommand;
 import world.bentobox.deathchest.commands.DeathChestCommand;
 import world.bentobox.deathchest.data.DeathChestManager;
 import world.bentobox.deathchest.listeners.ChestListener;
+import world.bentobox.deathchest.listeners.DeathDebugListener;
 import world.bentobox.deathchest.listeners.DeathListener;
 import world.bentobox.deathchest.listeners.IslandListener;
+import world.bentobox.deathchest.util.HologramManager;
 
 /**
  * DeathChest addon entry point.
@@ -34,6 +36,7 @@ public class DeathChest extends Addon {
     private final Config<Settings> config = new Config<>(this, Settings.class);
     private final @NonNull List<GameModeAddon> gameModes = new ArrayList<>();
     private DeathChestManager manager;
+    private HologramManager holograms;
     private BukkitTask expiryTask;
 
     @Override
@@ -63,13 +66,21 @@ public class DeathChest extends Addon {
         }
 
         manager = new DeathChestManager(this);
+        holograms = new HologramManager(this);
         manager.load();
 
         registerListener(new DeathListener(this));
         registerListener(new ChestListener(this));
         registerListener(new IslandListener(this));
+        registerListener(holograms);
+        // Always registered, but silent unless debug is switched on.
+        registerListener(new DeathDebugListener(this));
 
+        holograms.spawnAll();
         startExpiryTask();
+        if (settings.isDebug()) {
+            DeathDebugListener.dumpState(this);
+        }
     }
 
     @Override
@@ -83,12 +94,17 @@ public class DeathChest extends Addon {
         }
         if (manager != null) {
             startExpiryTask();
+            // The locale files may have been reloaded too, so redraw the hologram text.
+            holograms.spawnAll();
         }
     }
 
     @Override
     public void onDisable() {
         stopExpiryTask();
+        if (holograms != null) {
+            holograms.removeAll();
+        }
         if (manager != null) {
             manager.close();
         }
@@ -128,10 +144,38 @@ public class DeathChest extends Addon {
     }
 
     /**
+     * Write the settings back to config.yml. Used when debug is toggled in game so the
+     * setting survives a restart.
+     */
+    public void saveSettings() {
+        if (settings != null) {
+            config.saveConfigObject(settings);
+        }
+    }
+
+    /**
+     * Log a line to the console, but only when debug is switched on.
+     *
+     * @param message message to log
+     */
+    public void debug(String message) {
+        if (settings != null && settings.isDebug()) {
+            log("[debug] " + message);
+        }
+    }
+
+    /**
      * @return the death chest manager, or null if the addon is not enabled
      */
     public DeathChestManager getManager() {
         return manager;
+    }
+
+    /**
+     * @return the hologram manager, or null if the addon is not enabled
+     */
+    public HologramManager getHolograms() {
+        return holograms;
     }
 
     /**

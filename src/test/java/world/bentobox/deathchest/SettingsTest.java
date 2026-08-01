@@ -104,6 +104,9 @@ class SettingsTest {
         assertFalse(settings.isNotifyOnDeath());
         settings.setAllowTeleport(false);
         assertFalse(settings.isAllowTeleport());
+        assertFalse(settings.isDebug());
+        settings.setDebug(true);
+        assertTrue(settings.isDebug());
         settings.setExpiryAction(ExpiryAction.DELETE);
         assertEquals(ExpiryAction.DELETE, settings.getExpiryAction());
     }

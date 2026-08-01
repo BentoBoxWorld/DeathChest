@@ -1,4 +1,7 @@
 deathchest:
+  hologram: |-
+    <gold><bold>Ladă de moarte</bold></gold>
+    <yellow>[player]</yellow>
   death:
     chest-placed: "<green>Obiectele tale sunt într-o ladă de moarte la <aqua>[world] [number], [y], [z]</aqua>.</green>"
     stored-virtual: "<gold>Nu a fost loc pentru o ladă de moarte, deci obiectele tale sunt păstrate pentru tine. Folosește <aqua>/[label] deathchest</aqua> pentru a le recupera.</gold>"
@@ -33,3 +36,5 @@ deathchest:
       header: "<green>[name] are [number] ladă(e) de moarte:</green>"
       entry: "<aqua>[number].</aqua> <white>ladă: [description]</white> <gray>a murit la: [death]</gray>"
       purged: "<green>[number] ladă(e) de moarte șterse.</green>"
+      debug-on: "<green>Depanarea DeathChest este acum ACTIVATĂ. Fiecare moarte va fi raportată în consola serverului.</green>"
+      debug-off: "<gray>Depanarea DeathChest este acum dezactivată.</gray>"
