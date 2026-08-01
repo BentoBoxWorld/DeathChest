@@ -1,4 +1,7 @@
 deathchest:
+  hologram: |-
+    <gold><bold>Ölüm Sandığı</bold></gold>
+    <yellow>[player]</yellow>
   death:
     chest-placed: "<green>Eşyalarınız <aqua>[world] [number], [y], [z]</aqua> konumunda bir ölüm sandığında.</green>"
     stored-virtual: "<gold>Ölüm sandığı koyacak yer olmadığı için eşyalarınız sizin için bekletiliyor. Geri almak için <aqua>/[label] deathchest</aqua> kullanın.</gold>"
@@ -33,3 +36,5 @@ deathchest:
       header: "<green>[name]'in [number] ölüm sandığı var:</green>"
       entry: "<aqua>[number].</aqua> <white>sandık: [description]</white> <gray>öldü: [death]</gray>"
       purged: "<green>[number] süresi dolmuş ölüm sandığı silindi.</green>"
+      debug-on: "<green>DeathChest hata ayıklama artık AÇIK. Her ölüm sunucu konsolunda bildirilecek.</green>"
+      debug-off: "<gray>DeathChest hata ayıklama artık kapalı.</gray>"

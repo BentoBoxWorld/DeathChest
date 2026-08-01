@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -25,6 +26,7 @@ import world.bentobox.bentobox.managers.CommandsManager;
 import world.bentobox.bentobox.managers.PlayersManager;
 import world.bentobox.deathchest.CommonTestSetup;
 import world.bentobox.deathchest.DeathChest;
+import world.bentobox.deathchest.Settings;
 import world.bentobox.deathchest.data.DeathChestManager;
 import world.bentobox.deathchest.data.DeathChestRecord;
 
@@ -100,6 +102,21 @@ class AdminDeathChestCommandTest extends CommonTestSetup {
 
         verify(manager).checkExpiry();
         verify(user).sendMessage("deathchest.commands.admin.purged", "[number]", "4");
+    }
+
+    @Test
+    void testDebugTogglesAndSaves() {
+        Settings settings = new Settings();
+        when(addon.getSettings()).thenReturn(settings);
+
+        assertTrue(command.execute(user, "deathchest", List.of("debug")));
+        assertTrue(settings.isDebug());
+        verify(user).sendMessage("deathchest.commands.admin.debug-on");
+
+        assertTrue(command.execute(user, "deathchest", List.of("debug")));
+        assertFalse(settings.isDebug());
+        verify(user).sendMessage("deathchest.commands.admin.debug-off");
+        verify(addon, times(2)).saveSettings();
     }
 
     @Test

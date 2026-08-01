@@ -1,4 +1,7 @@
 deathchest:
+  hologram: |-
+    <gold><bold>Rương chết</bold></gold>
+    <yellow>[player]</yellow>
   death:
     chest-placed: "<green>Các vật phẩm của bạn trong một rương chết tại <aqua>[world] [number], [y], [z]</aqua>.</green>"
     stored-virtual: "<gold>Không có nơi đặt rương chết, vì vậy các vật phẩm của bạn đang được lưu giữ. Sử dụng <aqua>/[label] deathchest</aqua> để lấy chúng lại.</gold>"
@@ -33,3 +36,5 @@ deathchest:
       header: "<green>[name] có [number] rương chết:</green>"
       entry: "<aqua>[number].</aqua> <white>rương: [description]</white> <gray>chết tại: [death]</gray>"
       purged: "<green>Đã xóa [number] rương chết hết hạn.</green>"
+      debug-on: "<green>Gỡ lỗi DeathChest hiện đã BẬT. Mỗi cái chết sẽ được báo cáo trong bảng điều khiển máy chủ.</green>"
+      debug-off: "<gray>Gỡ lỗi DeathChest hiện đã tắt.</gray>"

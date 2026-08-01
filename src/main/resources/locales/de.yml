@@ -1,4 +1,7 @@
 deathchest:
+  hologram: |-
+    <gold><bold>Todestruhe</bold></gold>
+    <yellow>[player]</yellow>
   death:
     chest-placed: "<green>Deine Gegenstände sind in einer Todestruhe bei <aqua>[world] [number], [y], [z]</aqua>.</green>"
     stored-virtual: "<gold>Es gab keinen Platz für eine Todestruhe, daher werden deine Gegenstände für dich aufbewahrt. Verwende <aqua>/[label] deathchest</aqua> um sie zurückzubekommen.</gold>"
@@ -33,3 +36,5 @@ deathchest:
       header: "<green>[name] hat [number] Todestruhe(n):</green>"
       entry: "<aqua>[number].</aqua> <white>Kiste: [description]</white> <gray>gestorben bei: [death]</gray>"
       purged: "<green>[number] Todestruhe(n) gelöscht.</green>"
+      debug-on: "<green>DeathChest-Debug ist jetzt AN. Jeder Tod wird in der Serverkonsole gemeldet.</green>"
+      debug-off: "<gray>DeathChest-Debug ist jetzt aus.</gray>"

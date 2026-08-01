@@ -74,6 +74,11 @@ public class ChestPlacer {
                 if (spot != null) {
                     return Optional.of(new Placement(spot, deathIsland, true));
                 }
+                addon.debug("  No free block on solid ground within " + radius + " blocks and " + depth
+                        + " down of the death point. Falling back to the player's island.");
+            } else {
+                addon.debug("  Death point is " + (deathIsland == null ? "not in any island's protected area"
+                        : "on an island the player is not a member of") + ". Falling back to their own island.");
             }
         }
 
@@ -81,10 +86,14 @@ public class ChestPlacer {
         // so a nether or void death still resolves to the island the player can walk around on.
         World overworld = Util.getWorld(deathLocation.getWorld());
         if (overworld == null) {
+            addon.debug("  No overworld for " + deathLocation.getWorld().getName()
+                    + ", so the player's island cannot be found. Items will be held by the addon.");
             return Optional.empty();
         }
         Island own = addon.getIslands().getIsland(overworld, playerUUID);
         if (own == null) {
+            addon.debug("  The player has no island in " + overworld.getName()
+                    + ". Items will be held by the addon.");
             return Optional.empty();
         }
         Location home = addon.getIslands().getHomeLocation(own);
@@ -92,12 +101,18 @@ public class ChestPlacer {
             home = own.getProtectionCenter();
         }
         if (home == null || home.getWorld() == null) {
+            addon.debug("  The player's island has no home or protection centre. Items will be held by the addon.");
             return Optional.empty();
         }
         // The island may be far from any player, so make sure the chunk is there to build in.
         home.getWorld().getChunkAt(home).load(true);
         Location spot = search(clampToWorld(home), own, radius, depth, false);
-        return spot == null ? Optional.empty() : Optional.of(new Placement(spot, own, false));
+        if (spot == null) {
+            addon.debug("  No free block found on the player's island near " + home.getBlockX() + ","
+                    + home.getBlockY() + "," + home.getBlockZ() + ". Items will be held by the addon.");
+            return Optional.empty();
+        }
+        return Optional.of(new Placement(spot, own, false));
     }
 
     /**

@@ -1,4 +1,7 @@
 deathchest:
+  hologram: |-
+    <gold><bold>Cassa di morte</bold></gold>
+    <yellow>[player]</yellow>
   death:
     chest-placed: "<green>I tuoi oggetti sono in una cassa di morte a <aqua>[world] [number], [y], [z]</aqua>.</green>"
     stored-virtual: "<gold>Non c'era nessun posto per mettere una cassa di morte, quindi i tuoi oggetti sono conservati per te. Usa <aqua>/[label] deathchest</aqua> per recuperarli.</gold>"
@@ -33,3 +36,5 @@ deathchest:
       header: "<green>[name] ha [number] cassa(e) di morte:</green>"
       entry: "<aqua>[number].</aqua> <white>cassa: [description]</white> <gray>morto a: [death]</gray>"
       purged: "<green>Scaduta(e) [number] cassa(e) di morte.</green>"
+      debug-on: "<green>Il debug di DeathChest è ora ATTIVO. Ogni morte verrà segnalata nella console del server.</green>"
+      debug-off: "<gray>Il debug di DeathChest è ora disattivato.</gray>"

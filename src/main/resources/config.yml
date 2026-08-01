@@ -72,3 +72,10 @@ commands:
   # Allow '/[label] deathchest tp <number>' to teleport the player to their chest.
   # Players still need the [gamemode].deathchest.teleport permission.
   allow-teleport: true
+#
+# Write a detailed report of every death to the server console: which world it
+# was in, whether another plugin kept the inventory or took the drops, and where
+# the chest ended up. Turn this on if death chests are not appearing and you
+# need to find out why. It can also be toggled in game, without a restart, with
+# '/<gamemode>admin deathchest debug'.
+debug: false

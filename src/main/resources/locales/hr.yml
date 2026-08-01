@@ -1,4 +1,7 @@
 deathchest:
+  hologram: |-
+    <gold><bold>Škrinja smrti</bold></gold>
+    <yellow>[player]</yellow>
   death:
     chest-placed: "<green>Tvoji predmeti su u škrinji smrti na <aqua>[world] [number], [y], [z]</aqua>.</green>"
     stored-virtual: "<gold>Nije bilo mjesta za škrinju, pa se tvoji predmeti čuvaju. Koristi <aqua>/[label] deathchest</aqua> da ih dobiješ.</gold>"
@@ -33,3 +36,5 @@ deathchest:
       header: "<green>Igrač [name] ima [number] škrinje(u) smrti:</green>"
       entry: "<aqua>[number].</aqua> <white>škrinja: [description]</white> <gray>umro je u: [death]</gray>"
       purged: "<green>Obrisano [number] škrinje(u) smrti.</green>"
+      debug-on: "<green>DeathChest ispravljanje pogrešaka je sada UKLJUČENO. Svaka smrt bit će prijavljena u konzoli poslužitelja.</green>"
+      debug-off: "<gray>DeathChest ispravljanje pogrešaka je sada isključeno.</gray>"

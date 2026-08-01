@@ -41,10 +41,15 @@ public class DeathListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent e) {
         Player player = e.getEntity();
         if (!addon.inGameWorld(player.getWorld())) {
+            addon.debug("Ignoring death of " + player.getName() + ": " + player.getWorld().getName()
+                    + " is not a world of any game mode DeathChest is hooked into.");
             return;
         }
         // If the server or another plugin is keeping the inventory there is nothing to store.
         if (e.getKeepInventory()) {
+            addon.debug("Ignoring death of " + player.getName()
+                    + ": keepInventory is set, so the items are not being dropped. This is either the"
+                    + " keepInventory game rule, BentoBox's visitor-keep-inventory flag, or another plugin.");
             return;
         }
         Settings settings = addon.getSettings();
@@ -56,6 +61,9 @@ public class DeathListener implements Listener {
             xp = e.getDroppedExp() * settings.getExperiencePercent() / 100;
         }
         if (drops.isEmpty() && xp == 0) {
+            addon.debug("Nothing to store for " + player.getName()
+                    + ": no drops and no experience by the time DeathChest ran. If they were carrying"
+                    + " items, a plugin running before DeathChest has already taken them.");
             return;
         }
 
@@ -65,6 +73,9 @@ public class DeathListener implements Listener {
         }
 
         DeathChestRecord chest = addon.getManager().createChest(player, drops, xp);
+        addon.debug("Took " + drops.size() + " stack(s) and " + xp + " xp from " + player.getName()
+                + ". Chest block: " + DeathDebugListener.describe(chest.getChestLoc()) + ", items held by the addon: "
+                + addon.getManager().readItems(chest).size() + " stack(s).");
         if (settings.isNotifyOnDeath()) {
             notifyPlayer(User.getInstance(player), chest, addon.getGameModeLabel(player.getWorld()));
         }

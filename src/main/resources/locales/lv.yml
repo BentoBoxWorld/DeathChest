@@ -1,4 +1,7 @@
 deathchest:
+  hologram: |-
+    <gold><bold>Nāves lāde</bold></gold>
+    <yellow>[player]</yellow>
   death:
     chest-placed: "<green>Jūsu preces atrodas nāves lādē <aqua>[world] [number], [y], [z]</aqua>.</green>"
     stored-virtual: "<gold>Nav vietas nāves lādei, tāpēc jūsu preces tiek glabātas jums. Izmantojiet <aqua>/[label] deathchest</aqua> to tām atgriezties.</gold>"
@@ -33,3 +36,5 @@ deathchest:
       header: "<green>[name] ir [number] nāves lāde/lādes:</green>"
       entry: "<aqua>[number].</aqua> <white>lāde: [description]</white> <gray>gāja bojā: [death]</gray>"
       purged: "<green>Notīrīti [number] nāves lāde/lādes.</green>"
+      debug-on: "<green>DeathChest atkļūdošana tagad ir IESLĒGTA. Katra nāve tiks ziņota servera konsolē.</green>"
+      debug-off: "<gray>DeathChest atkļūdošana tagad ir izslēgta.</gray>"

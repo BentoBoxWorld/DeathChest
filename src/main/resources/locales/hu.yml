@@ -1,4 +1,7 @@
 deathchest:
+  hologram: |-
+    <gold><bold>Halálláda</bold></gold>
+    <yellow>[player]</yellow>
   death:
     chest-placed: "<green>A tárgyaid egy halálláda <aqua>[world] [number], [y], [z]</aqua> koordinátáin vannak.</green>"
     stored-virtual: "<gold>Nincs hely a halálládához, ezért a tárgyaid számunkra kerültek tárolásra. Használd az <aqua>/[label] deathchest</aqua> parancsot, hogy vissza kapd őket.</gold>"
@@ -33,3 +36,5 @@ deathchest:
       header: "<green>[name]-nak [number] halálládája van:</green>"
       entry: "<aqua>[number].</aqua> <white>láda: [description]</white> <gray>meghalt helyen: [death]</gray>"
       purged: "<green>[number] halálláda törlésre került.</green>"
+      debug-on: "<green>A DeathChest hibakeresés most BE van kapcsolva. Minden halál jelentve lesz a szerver konzolján.</green>"
+      debug-off: "<gray>A DeathChest hibakeresés most ki van kapcsolva.</gray>"

@@ -1,4 +1,7 @@
 deathchest:
+  hologram: |-
+    <gold><bold>Peti Kematian</bold></gold>
+    <yellow>[player]</yellow>
   death:
     chest-placed: "<green>Item-item Anda ada di peti kematian di <aqua>[world] [number], [y], [z]</aqua>.</green>"
     stored-virtual: "<gold>Tidak ada tempat untuk meletakkan peti kematian, jadi item-item Anda sedang disimpan untuk Anda. Gunakan <aqua>/[label] deathchest</aqua> untuk mengambilnya kembali.</gold>"
@@ -33,3 +36,5 @@ deathchest:
       header: "<green>[name] memiliki [number] peti kematian:</green>"
       entry: "<aqua>[number].</aqua> <white>peti: [description]</white> <gray>meninggal di: [death]</gray>"
       purged: "<green>Peti kematian yang kadaluarsa dihapus [number] buah.</green>"
+      debug-on: "<green>Debug DeathChest sekarang AKTIF. Setiap kematian akan dilaporkan di konsol server.</green>"
+      debug-off: "<gray>Debug DeathChest sekarang nonaktif.</gray>"

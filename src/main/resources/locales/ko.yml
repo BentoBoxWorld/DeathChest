@@ -1,4 +1,7 @@
 deathchest:
+  hologram: |-
+    <gold><bold>죽음의 상자</bold></gold>
+    <yellow>[player]</yellow>
   death:
     chest-placed: "<green>당신의 아이템은 <aqua>[world] [number], [y], [z]</aqua>의 죽음의 상자에 보관되어 있습니다.</green>"
     stored-virtual: "<gold>죽음의 상자를 놓을 수 있는 장소가 없어서, 당신의 아이템은 임시 보관 중입니다. <aqua>/[label] deathchest</aqua>를 사용하여 받아가세요.</gold>"
@@ -33,3 +36,5 @@ deathchest:
       header: "<green>[name]은 죽음의 상자 [number]개를 가지고 있습니다:</green>"
       entry: "<aqua>[number].</aqua> <white>상자: [description]</white> <gray>죽은 위치: [death]</gray>"
       purged: "<green>만료된 죽음의 상자 [number]개를 삭제했습니다.</green>"
+      debug-on: "<green>DeathChest 디버그가 켜졌습니다. 모든 죽음이 서버 콘솔에 보고됩니다.</green>"
+      debug-off: "<gray>DeathChest 디버그가 꺼졌습니다.</gray>"

@@ -1,4 +1,7 @@
 deathchest:
+  hologram: |-
+    <gold><bold>Skrzynia śmierci</bold></gold>
+    <yellow>[player]</yellow>
   death:
     chest-placed: "<green>Twoje przedmioty znajdują się w skrzyni śmierci w <aqua>[world] [number], [y], [z]</aqua>.</green>"
     stored-virtual: "<gold>Nie było miejsca na postawienie skrzyni śmierci, więc Twoje przedmioty są tymczasowo przechowywane. Użyj <aqua>/[label] deathchest</aqua> aby je odzyskać.</gold>"
@@ -33,3 +36,5 @@ deathchest:
       header: "<green>Gracz [name] ma [number] skrzynie śmierci:</green>"
       entry: "<aqua>[number].</aqua> <white>skrzynia: [description]</white> <gray>zmarł w: [death]</gray>"
       purged: "<green>Usunięto [number] skrzynie śmierci.</green>"
+      debug-on: "<green>Debugowanie DeathChest jest teraz WŁĄCZONE. Każda śmierć będzie zgłaszana w konsoli serwera.</green>"
+      debug-off: "<gray>Debugowanie DeathChest jest teraz wyłączone.</gray>"

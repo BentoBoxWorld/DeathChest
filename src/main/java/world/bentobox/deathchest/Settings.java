@@ -126,6 +126,15 @@ public class Settings implements ConfigObject {
     @ConfigEntry(path = "commands.allow-teleport")
     private boolean allowTeleport = true;
 
+    @ConfigComment("")
+    @ConfigComment("Write a detailed report of every death to the server console: which world it")
+    @ConfigComment("was in, whether another plugin kept the inventory or took the drops, and where")
+    @ConfigComment("the chest ended up. Turn this on if death chests are not appearing and you")
+    @ConfigComment("need to find out why. It can also be toggled in game, without a restart, with")
+    @ConfigComment("'/<gamemode>admin deathchest debug'.")
+    @ConfigEntry(path = "debug")
+    private boolean debug = false;
+
     // ------------------------------------------------------------------------
     // Getters and setters
     // ------------------------------------------------------------------------
@@ -260,5 +269,13 @@ public class Settings implements ConfigObject {
 
     public void setAllowTeleport(boolean allowTeleport) {
         this.allowTeleport = allowTeleport;
+    }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 }

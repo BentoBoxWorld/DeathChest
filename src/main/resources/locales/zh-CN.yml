@@ -1,4 +1,7 @@
 deathchest:
+  hologram: |-
+    <gold><bold>死亡箱</bold></gold>
+    <yellow>[player]</yellow>
   death:
     chest-placed: "<green>您的物品保存在 <aqua>[world] [number], [y], [z]</aqua> 的死亡箱中。</green>"
     stored-virtual: "<gold>无法放置死亡箱，您的物品已被插件保管。使用 <aqua>/[label] deathchest</aqua> 取回。</gold>"
@@ -33,3 +36,5 @@ deathchest:
       header: "<green>[name] 有 [number] 个死亡箱：</green>"
       entry: "<aqua>[number].</aqua> <white>箱子: [description]</white> <gray>死亡位置: [death]</gray>"
       purged: "<green>已清除 [number] 个过期的死亡箱。</green>"
+      debug-on: "<green>DeathChest 调试已开启。每次死亡都会在服务器控制台中报告。</green>"
+      debug-off: "<gray>DeathChest 调试已关闭。</gray>"

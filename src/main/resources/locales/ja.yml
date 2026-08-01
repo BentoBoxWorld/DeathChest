@@ -1,4 +1,7 @@
 deathchest:
+  hologram: |-
+    <gold><bold>デスチェスト</bold></gold>
+    <yellow>[player]</yellow>
   death:
     chest-placed: "<green>あなたのアイテムは <aqua>[world] [number], [y], [z]</aqua> のデスチェストに保存されました。</green>"
     stored-virtual: "<gold>デスチェストを置く場所がなかったため、あなたのアイテムは一時保管されています。 <aqua>/[label] deathchest</aqua> を使用して取得してください。</gold>"
@@ -33,3 +36,5 @@ deathchest:
       header: "<green>[name] はデスチェスト [number] 個を持っています:</green>"
       entry: "<aqua>[number].</aqua> <white>チェスト: [description]</white> <gray>死亡地点: [death]</gray>"
       purged: "<green>期限切れのデスチェスト [number] 個を削除しました。</green>"
+      debug-on: "<green>DeathChest のデバッグが ON になりました。すべての死亡がサーバーコンソールに報告されます。</green>"
+      debug-off: "<gray>DeathChest のデバッグが OFF になりました。</gray>"
