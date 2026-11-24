@@ -1,5 +1,8 @@
 # DeathChest
 
+<!-- BentoBox stats badges: https://download.bentobox.world/admin (Badges tab) -->
+[![Servers](https://download.bentobox.world/badge/DeathChest/servers.svg)](https://download.bentobox.world/) [![Downloads](https://download.bentobox.world/badge/DeathChest/downloads.svg)](https://download.bentobox.world/) [![Minecraft](https://download.bentobox.world/badge/DeathChest/mc.svg)](https://download.bentobox.world/)
+
 A death chest addon for [BentoBox](https://bentobox.world) that works in void worlds.
 
 ## The problem
